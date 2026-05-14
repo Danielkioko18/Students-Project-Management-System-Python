@@ -55,3 +55,107 @@
     </ul>
   </div>
 </nav>
+
+<style>
+  .sidebar.column-1 {
+    position: fixed;
+    left: 0;
+    top: 60px;
+    width: 250px;
+    height: calc(100vh - 60px);
+    background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+    padding: 0;
+    overflow-y: auto;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+  }
+
+  .sidebar.column-1 .navbar-nav {
+    padding: 20px 0;
+  }
+
+  .sidebar.column-1 .nav-item {
+    margin: 0;
+  }
+
+  .sidebar.column-1 .nav-link {
+    color: #ecf0f1 !important;
+    padding: 15px 25px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-left: 4px solid transparent;
+    margin: 5px 0;
+  }
+
+  .sidebar.column-1 .nav-link i {
+    font-size: 1.1rem;
+    width: 20px;
+  }
+
+  .sidebar.column-1 .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff !important;
+    border-left-color: #667eea;
+    padding-left: 22px;
+  }
+
+  .sidebar.column-1 .nav-link.active {
+    background: linear-gradient(90deg, rgba(102, 126, 234, 0.2) 0%, transparent 100%);
+    color: #667eea !important;
+    border-left-color: #667eea;
+    font-weight: 600;
+  }
+
+  .sidebar.column-1 .nav-link strong {
+    font-weight: 600;
+  }
+
+  /* Scrollbar styling */
+  .sidebar.column-1::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .sidebar.column-1::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .sidebar.column-1::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+  }
+
+  .sidebar.column-1::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .sidebar.column-1 {
+      position: static;
+      width: 100%;
+      height: auto;
+      background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+    }
+
+    .sidebar.column-1 .navbar-nav {
+      display: flex;
+      flex-direction: row;
+      gap: 0;
+      padding: 10px 0;
+      flex-wrap: wrap;
+    }
+
+    .sidebar.column-1 .nav-item {
+      flex: 0 1 50%;
+    }
+
+    .sidebar.column-1 .nav-link {
+      padding: 12px 15px;
+      font-size: 0.85rem;
+    }
+  }
+</style>
+

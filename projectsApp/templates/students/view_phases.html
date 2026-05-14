@@ -1,6 +1,10 @@
 <title>My Uploads</title>
-{% extends 'base.html' %} {% load static %} {% block content %} {% include
-'column1.html' %}
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Content Area -->
+{% include 'column1.html' %}
 
 <div class="content">
   <div class="container-fluid">
@@ -54,27 +58,28 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {% for document in phase.documents.all %} {% if
-                    document.student == request.user %}
-                    <tr>
-                      <th scope="row">{{ forloop.counter }}</th>
-                      <td>{{ document.file_name }}</td>
-                      <td>{{ document.status }}</td>
-                      <td>
-                        <a
-                          href="{{ document.file.url }}"
-                          target="_blank"
-                          type="application/pdf"
-                          >View</a
-                        >
-                      </td>
-                    </tr>
-                    {% endif %} {% empty %}
-                    <tr>
-                      <td colspan="4" class="text-center text-danger">
-                        No documents uploaded for this phase yet.
-                      </td>
-                    </tr>
+                    {% for document in phase.documents.all %}
+                      {% if document.student == request.user %}
+                        <tr>
+                          <th scope="row">{{ forloop.counter }}</th>
+                          <td>{{ document.file_name }}</td>
+                          <td>{{ document.status }}</td>
+                          <td>
+                            <a
+                              href="{{ document.file.url }}"
+                              target="_blank"
+                              type="application/pdf"
+                              >View</a
+                            >
+                          </td>
+                        </tr>
+                      {% endif %}
+                    {% empty %}
+                      <tr>
+                        <td colspan="4" class="text-center text-danger">
+                          No documents uploaded for this phase yet.
+                        </td>
+                      </tr>
                     {% endfor %}
                   </tbody>
                 </table>

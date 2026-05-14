@@ -9,6 +9,16 @@
       align-content: center;
   }
 
+  /* Ensure sidebar remains visible */
+  .sidebar {
+    display: block !important;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 250px;
+    z-index: 100;
+  }
+
   /* Media query for responsive sidebar */
   @media (max-width: 768px) {
       .sidebar {
