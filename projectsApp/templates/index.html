@@ -1,54 +1,372 @@
 {% extends "base_home.html" %} {% load static %} {% block content %}
-<div class="main-content-container container-fluid">
-  <div class="row no-gutters h-100">
-    <div class="col-lg-5 col-md-5 mx-auto my-auto">
-      <br /><br /><br /><br /><br /><br />
-      <div class="card mt-5">
-        <div class="card-header text-center text-center text-info">
-          <h4><b>Login as</b></h4>
-        </div>
-        <div class="card-body">
-          <div class="row mt-5">
-            <div class="col">
-              <a href="{% url 'login' %}" class="btn btn-success">Student</a>
-            </div>
-            <div class="col">
-              <a href="{% url 'supervisor_login' %}" class="btn btn-info"
-                >Supervisor</a
-              >
-            </div>
-            <div class="col">
-              <a href="{% url 'cordinator_login' %}" class="btn btn-dark"
-                >Coordinator</a
-              >
-            </div>
+<div class="landing-page">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="container">
+        <div class="row align-items-center h-100">
+          <div class="col-lg-6 col-md-8 mx-auto text-center">
+            <h1 class="hero-title">Students Project Management System</h1>
+            <p class="hero-description">Manage projects, track milestones, and collaborate with supervisors and coordinators in one unified platform.</p>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
+
+  <!-- Login Options Section -->
+  <section class="login-section">
+    <div class="container">
+      <div class="row mb-5">
+        <div class="col-12 text-center">
+          <h2 class="section-title">Get Started</h2>
+          <p class="section-subtitle">Select your role to continue</p>
+        </div>
+      </div>
+      
+      <div class="row">
+        <!-- Student Login Card -->
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="login-card student-card">
+            <div class="card-icon">
+              <i class="fas fa-user-graduate"></i>
+            </div>
+            <h3 class="card-title">Student</h3>
+            <p class="card-description">Submit project titles, upload documents, and track your progress through different phases.</p>
+            <a href="{% url 'login' %}" class="btn btn-student btn-block">Login as Student</a>
+          </div>
+        </div>
+
+        <!-- Supervisor Login Card -->
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="login-card supervisor-card">
+            <div class="card-icon">
+              <i class="fas fa-chalkboard-user"></i>
+            </div>
+            <h3 class="card-title">Supervisor</h3>
+            <p class="card-description">Manage your assigned students, review submissions, and provide feedback on project milestones.</p>
+            <a href="{% url 'supervisor_login' %}" class="btn btn-supervisor btn-block">Login as Supervisor</a>
+          </div>
+        </div>
+
+        <!-- Coordinator Login Card -->
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="login-card coordinator-card">
+            <div class="card-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3 class="card-title">Coordinator</h3>
+            <p class="card-description">Oversee the entire system, manage phases, assign supervisors, and monitor all project statuses.</p>
+            <a href="{% url 'cordinator_login' %}" class="btn btn-coordinator btn-block">Login as Coordinator</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="container">
+      <div class="row mb-5">
+        <div class="col-12 text-center">
+          <h2 class="section-title">Why Choose SPMS?</h2>
+          <p class="section-subtitle">Powerful features for project management</p>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="feature-box">
+            <i class="fa fa-tasks"></i>
+            <h4>Project Management</h4>
+            <p>Organized project workflows with clear phases and milestones.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="feature-box">
+            <i class="fa fa-upload"></i>
+            <h4>Document Upload</h4>
+            <p>Seamlessly upload and manage project documents and resources.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="feature-box">
+            <i class="fas fa-bell"></i>
+            <h4>Notifications</h4>
+            <p>Stay updated with real-time notifications and announcements.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="feature-box">
+            <i class="fas fa-chart-bar"></i>
+            <h4>Progress Tracking</h4>
+            <p>Monitor project progress with detailed milestone tracking.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
+
 <style>
-  body {
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    background-image: url("{% static 'images/home.jpg' %}");
-    background-size: cover;
-    background-position: center;
+  .landing-page {
+    margin-top: 60px;
+    min-height: calc(100vh - 60px);
   }
-  .card {
-    margin-top: 00px;
-    width: 100%;
-    height: 80%;
-    background-color: rgb(203, 219, 219);
-    opacity: 0.89;
+
+  /* Hero Section */
+  .hero-section {
+    position: relative;
+    height: 50vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    overflow: hidden;
   }
-  .btn {
-    width: 100%;
-    font-weight: bold;
-    font-size: large;
+
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
     text-align: center;
+  }
+
+  .hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    animation: slideInDown 0.8s ease-out;
+  }
+
+  .hero-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    font-weight: 300;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .hero-description {
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0.95;
+  }
+
+  /* Login Section */
+  .login-section {
+    padding: 60px 0;
+    background-color: #f8f9fa;
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  .section-subtitle {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 40px;
+  }
+
+  /* Login Cards */
+  .login-card {
+    background: white;
+    border-radius: 15px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border-top: 5px solid;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .login-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  .student-card {
+    border-top-color: #28a745;
+  }
+
+  .supervisor-card {
+    border-top-color: #17a2b8;
+  }
+
+  .coordinator-card {
+    border-top-color: #343a40;
+  }
+
+  .card-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    display: inline-block;
+  }
+
+  .student-card .card-icon {
+    color: #28a745;
+  }
+
+  .supervisor-card .card-icon {
+    color: #17a2b8;
+  }
+
+  .coordinator-card .card-icon {
+    color: #343a40;
+  }
+
+  .card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin: 15px 0;
+  }
+
+  .card-description {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    flex-grow: 1;
+  }
+
+  .btn-student {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+    font-weight: 600;
+    padding: 12px 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-student:hover {
+    background-color: #218838;
+    border-color: #218838;
+    color: white;
+  }
+
+  .btn-supervisor {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    color: white;
+    font-weight: 600;
+    padding: 12px 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-supervisor:hover {
+    background-color: #138496;
+    border-color: #138496;
+    color: white;
+  }
+
+  .btn-coordinator {
+    background-color: #343a40;
+    border-color: #343a40;
+    color: white;
+    font-weight: 600;
+    padding: 12px 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-coordinator:hover {
+    background-color: #23272b;
+    border-color: #23272b;
+    color: white;
+  }
+
+  /* Features Section */
+  .features-section {
+    padding: 60px 0;
+    background-color: white;
+  }
+
+  .feature-box {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+
+  .feature-box:hover {
+    border-color: #667eea;
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.1);
+  }
+
+  .feature-box i {
+    font-size: 2.5rem;
+    color: #667eea;
+    margin-bottom: 15px;
+  }
+
+  .feature-box h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  .feature-box p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  @keyframes slideInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+    }
+
+    .login-card {
+      padding: 30px 20px;
+    }
+
+    .card-icon {
+      font-size: 2rem;
+    }
   }
 </style>
 {% endblock %}
