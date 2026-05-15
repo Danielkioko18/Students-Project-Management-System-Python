@@ -13,10 +13,12 @@
         <div class="card-body text-light fw-bold">
           <div class="row">
             <div class="col-md text-center">
-              {% if my_project %} {% for project in my_project %}
-              <b><h3 class="font-monospace">{{ project.title }}</h3></b>
-              {% endfor %} {% else %}
-              <p>You Have not uploaded any project yet</p>
+              {% if my_project %}
+                {% for project in my_project %}
+                  <b><h3 class="font-monospace">{{ project.title }}</h3></b>
+                {% endfor %}
+              {% else %}
+                <p>You Have not uploaded any project yet</p>
               {% endif %}
             </div>
           </div>
@@ -38,10 +40,12 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md">
-              {% if my_project %} {% for project in my_project %}
-              <b>{{ project.objectives|linebreaks }}</b>
-              {% endfor %} {% else %}
-              <p>You Have not uploaded any project yet</p>
+              {% if my_project %}
+                {% for project in my_project %}
+                  <b>{{ project.objectives|linebreaks }}</b>
+                {% endfor %}
+              {% else %}
+                <p>You Have not uploaded any project yet</p>
               {% endif %}
             </div>
           </div>
@@ -58,12 +62,14 @@
           <br />
           <div class="row">
             <div class="col-md text-center font-monospace">
-              {% if my_project %} {% for project in my_project %}
-              <b class="text-center text-light"
-                ><h4>{{ project.status|title }}</h4></b
-              >
-              {% endfor %} {% else %}
-              <p class="text-danger">You Have not uploaded any project yet</p>
+              {% if my_project %}
+                {% for project in my_project %}
+                  <b class="text-center text-light"
+                    ><h4>{{ project.status|title }}</h4></b
+                  >
+                {% endfor %}
+              {% else %}
+                <p class="text-danger">You Have not uploaded any project yet</p>
               {% endif %}
             </div>
           </div>

@@ -31,18 +31,20 @@
               </tr>
             </thead>
             <tbody>
-              {% if projects.exists %} {% for project in projects %}
-              <tr>
-                <th scope="row">{{forloop.counter}}</th>
-                <td>{{project.student.regno|upper}}</td>
-                <td>{{project.student.name|upper}}</td>
-                <td>{{project.title|upper}}</td>
-                <td>{{project.lecturer.name|title}}</td>
-              </tr>
-              {% endfor %} {% else %}
-              <tr>
-                <td colspan="6" class="text-center text-danger">
-                  No complete projects found.
+              {% if projects.exists %}
+                {% for project in projects %}
+                  <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{project.student.regno|upper}}</td>
+                    <td>{{project.student.name|upper}}</td>
+                    <td>{{project.title|upper}}</td>
+                    <td>{{project.lecturer.name|title}}</td>
+                  </tr>
+                {% endfor %}
+              {% else %}
+                <tr>
+                  <td colspan="6" class="text-center text-danger">
+                    No complete projects found.
                 </td>
               </tr>
               {% endif %}
