@@ -1,4 +1,5 @@
 media/
 venv/
 db.sqlite3
+.env
 

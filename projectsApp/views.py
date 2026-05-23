@@ -1019,7 +1019,7 @@ def add_supervisor(request):
         send_email(recipient_email, subject, message)'''
 
 
-        success_message = "Registration successful. Please login to continue."
+        success_message = "Supervisor added successfully."
         return render(request, 'cordinator/add_lecturer.html', {'success_message': success_message})
 
     return render(request, 'cordinator/add_lecturer.html')

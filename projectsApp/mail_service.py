@@ -1,14 +1,19 @@
 import smtplib
 import ssl
+import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 def send_email(recipient_email, subject, message):
 
-    # Email credentials (replace with your own)
-    sender_email = "kioko.projects@gmail.com"
-    password = "qrha bcyw novh jkjb"
+    # Email credentials from environment variables
+    sender_email = os.getenv("EMAIL_USER")
+    password = os.getenv("EMAIL_PASSWORD")
 
     # Email content
     msg = MIMEMultipart()
