@@ -84,27 +84,72 @@
       /* Sidebar positioning and width */
       .sidebar {
         position: fixed;
-        top: 0;
+        top: 20px; /* Adjust based on header height */
         left: 0;
         width: 240px; /* Adjust as needed */
         height: 100vh;
-        background-color: #647c94; /* Light gray background */
-        border-right: 1px solid black;
+        background-color: #647c94;
+        border-right: 1px solid #1d1d1d;
         padding: 10px;
-        overflow-x: hidden; /* Prevent horizontal scrollbar */
+        overflow-x: hidden;
       }
 
       /* Sidebar links */
       .sidebar .nav-link {
         font-weight: 700;
-        color: #d92727;
+        color: #f7f7f7;
+        padding: 10px 12px;
+        border-radius: 8px;
+        transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      }
+
+      .sidebar .nav-link:hover,
+      .sidebar .nav-link:focus {
+        color: #ffffff;
+        background-color: rgba(255, 255, 255, 0.12);
       }
 
       .sidebar .nav-link.active {
-        color: #bb0404; /* Active link color */
+        color: #ffffff;
+        background-color: rgba(7, 141, 244, 0.14);
+        border-left: 4px solid #ffd54f;
+        padding-left: 8px;
       }
 
-      /* Sidebar toggle button */
+      .sidebar .nav-link[aria-expanded="true"] {
+        background-color: rgba(255, 255, 255, 0.08);
+      }
+
+      .sidebar .nav-link[aria-expanded="true"] .fas.fa-chevron-down {
+        transform: rotate(180deg);
+        transition: transform 0.25s ease;
+      }
+
+      .sidebar .nav-item .collapse .nav-link {
+        font-weight: 600;
+        color: #644040;
+        padding-left: 1.9rem;
+        padding-right: 12px;
+        font-size: 0.95rem;
+        border-radius: 8px;
+      }
+
+      .sidebar .nav-item .collapse .nav-link:hover,
+      .sidebar .nav-item .collapse .nav-link:focus {
+        background-color: rgba(255, 255, 255, 0.08);
+      }
+
+      .sidebar .nav-item .collapse .nav-link.active {
+        color: #070707;
+        background-color: rgba(255, 255, 255, 0.18);
+        border-left: 4px solid #ffcc80;
+        padding-left: 1.5rem;
+      }
+
+      .sidebar .nav-item + .nav-item {
+        margin-top: 6px;
+      }
+
       .sidebar .navbar-toggler {
         position: absolute;
         top: 15px;

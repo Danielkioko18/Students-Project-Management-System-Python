@@ -1,165 +1,537 @@
-<title>Dashboard</title>
 {% extends "base_cord.html" %}
 {% load static %}
 
 {% block content %}
 
 {% include "column1_cord.html" %}
-<div class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="card mb-5 bg-primary">
-                <div class="card-body text-light">
-                    <div class="row">
-                        <div class="col-md">
-                            <h1 class="text-center text"><b>{{supervisor_count}}</b></h1>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-md text-center">
-                            <h4><b>Supervisors</b></h4>
-                        </div>
-                    </div>
-                    
-                </div>
-                <div class="card-footer text-center ">
-                    <a href="{% url "add_supervisor" %}" class="btn btn-primary">Add Supervisor</a>
-                    <a href="{% url "view_supervisors" %}" class="btn btn-success">View All</a>
-                </div>
-            </div>
-            <div class="card mb-5 bg-primary">
-                <div class="card-body text-light">
-                    <div class="row">
-                        <div class="col-md">
-                            <h1 class="text-center"><b>{{student_count}}</b></h1>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-md text-center">
-                            <h4><b>Registered Students</b></h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer text-center ">
-                   <a href="{% url "registered_students" %}" class="btn btn-primary text-center">View All</a>
-                </div>
-            </div>
-            <div class="card mb-5 bg-success">
-                <div class="card-body">
-                    <div class="row text-light">
-                        <div class="col-md">
-                            <h1 class="text-center"><b>{{project_count}}</b></h1>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row text-center text-light">
-                        <div class="col-md">
-                           <h4><strong>Uploaded Titles</strong></h4> 
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer text-center ">
-                    <a href="{% url "view_projects" %}" class="btn btn-primary">View All</a>
-                </div>
-            </div>
-            <div class="card mb-5 bg-info">
-                <div class="card-body">
-                    <div class="row text-light">
-                        <div class="col-md">
-                            <h1 class="text-center"><b>{{approved_count}}</b></h1>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row text-center text-light">
-                        <div class="col-md">
-                           <h4><strong>Approved Titles</strong></h4> 
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer text-center ">
-                    <a href="{% url "approved_titles" %}" class="btn btn-primary">View All</a>
-                </div>
-            </div>
-            <div class="card mb-5 bg-info">
-                <div class="card-body">
-                    <div class="row text-light">
-                        <div class="col-md">
-                            <h1 class="text-center"><b>{{pending_count}}</b></h1>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row text-center text-light">
-                        <div class="col-md">
-                           <h4><strong>Pending Titles</strong></h4> 
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer text-center ">
-                    <a href="{% url "pending_titles" %}" class="btn btn-primary">View All</a>
-                </div>
-            </div>
-            <div class="card mb-5 bg-warning">
-                <div class="card-body text-center">
-                    <div class="row text-light">
-                        <div class="col-md">
-                            <h1 class="text-center"><b>{{phase_count}}</b></h1>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row text-center text-light">
-                        <div class="col-md">
-                           <h4><strong>Project Phases</strong></h4> 
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer text-center ">
-                    <a href="{% url "view_phases" %}" class="btn btn-primary">View Details</a>
-                </div>
-            </div>
-            <div class="card mb-5 bg-secondary">
-                <div class="card-body text-center">
-                    <div class="row text-light">
-                        <div class="col-md">
-                            <h1 class="text-center"><b>{{active_count}}</b></h1>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row text-center text-light">
-                        <div class="col-md">
-                           <h4><strong>Active Projects</strong></h4> 
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer text-center ">
-                    <a href="{% url "view_milestones" %}" class="btn btn-primary">View Projects</a>
-                </div>
-            </div>
-            <div class="card mb-5 bg-dark">
-                <div class="card-body text-center">
-                    <div class="row text-light">
-                        <div class="col-md">
-                            <h1 class="text-center"><b>{{complete_count}}</b></h1>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row text-center text-light">
-                        <div class="col-md">
-                           <h4><strong>Completed Projects</strong></h4> 
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer text-center ">
-                    <a href="{% url "completed_projects" %}" class="btn btn-primary">View Projects</a>
-                </div>
-            </div>
-        </div>
-              
-    </div>
-</div>
-  
-<link rel="stylesheet" href="{% static 'css/student_dashboard.css' %}">
 
+<div class="content">
+  <div class="dashboard-wrapper">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">Dashboard</h2>
+        <p class="page-sub">Welcome back — here's what's happening with your projects.</p>
+      </div>
+      <div class="header-actions">
+        <a href="{% url 'add_supervisor' %}" class="btn-primary-action">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Supervisor
+        </a>
+        <a href="{% url 'make_announcement' %}" class="btn-secondary-action">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          Announcement
+        </a>
+      </div>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <div class="stat-icon icon-blue">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="stat-body">
+          <span class="stat-value">{{ supervisor_count }}</span>
+          <span class="stat-label">Supervisors</span>
+        </div>
+        <div class="stat-footer">
+          <a href="{% url 'view_supervisors' %}">View all →</a>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-teal">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        </div>
+        <div class="stat-body">
+          <span class="stat-value">{{ student_count }}</span>
+          <span class="stat-label">Registered Students</span>
+        </div>
+        <div class="stat-footer">
+          <a href="{% url 'registered_students' %}">View all →</a>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-purple">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <div class="stat-body">
+          <span class="stat-value">{{ project_count }}</span>
+          <span class="stat-label">Uploaded Titles</span>
+        </div>
+        <div class="stat-footer">
+          <a href="{% url 'view_projects' %}">View all →</a>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-green">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="stat-body">
+          <span class="stat-value">{{ approved_count }}</span>
+          <span class="stat-label">Approved Titles</span>
+        </div>
+        <div class="stat-footer">
+          <a href="{% url 'approved_titles' %}">View all →</a>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-amber">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="stat-body">
+          <span class="stat-value">{{ pending_count }}</span>
+          <span class="stat-label">Pending Titles</span>
+        </div>
+        <div class="stat-footer">
+          <a href="{% url 'pending_titles' %}">View all →</a>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-coral">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </div>
+        <div class="stat-body">
+          <span class="stat-value">{{ phase_count }}</span>
+          <span class="stat-label">Project Phases</span>
+        </div>
+        <div class="stat-footer">
+          <a href="{% url 'view_phases' %}">View details →</a>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-gray">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="stat-body">
+          <span class="stat-value">{{ active_count }}</span>
+          <span class="stat-label">Active Projects</span>
+        </div>
+        <div class="stat-footer">
+          <a href="{% url 'view_milestones' %}">View all →</a>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-indigo">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+        </div>
+        <div class="stat-body">
+          <span class="stat-value">{{ complete_count }}</span>
+          <span class="stat-label">Completed Projects</span>
+        </div>
+        <div class="stat-footer">
+          <a href="{% url 'completed_projects' %}">View all →</a>
+        </div>
+      </div>
+
+    </div><!-- /stats-grid -->
+
+    <!-- Bottom Row -->
+    <div class="bottom-row">
+
+      <!-- Project Status Breakdown -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3 class="panel-title">Project status breakdown</h3>
+        </div>
+        <div class="status-list">
+          <div class="status-item">
+            <div class="status-meta">
+              <span class="status-dot" style="background:#3b82f6"></span>
+              <span class="status-name">Uploaded</span>
+              <span class="status-count">{{ project_count }}</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" style="background:#3b82f6; width: {% if project_count %}100{% else %}0{% endif %}%"></div>
+            </div>
+          </div>
+          <div class="status-item">
+            <div class="status-meta">
+              <span class="status-dot" style="background:#22c55e"></span>
+              <span class="status-name">Approved</span>
+              <span class="status-count">{{ approved_count }}</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" style="background:#22c55e; width:{% if project_count %}{% widthratio approved_count project_count 100 %}{% else %}0{% endif %}%"></div>
+            </div>
+          </div>
+          <div class="status-item">
+            <div class="status-meta">
+              <span class="status-dot" style="background:#f59e0b"></span>
+              <span class="status-name">Pending</span>
+              <span class="status-count">{{ pending_count }}</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" style="background:#f59e0b; width:{% if project_count %}{% widthratio pending_count project_count 100 %}{% else %}0{% endif %}%"></div>
+            </div>
+          </div>
+          <div class="status-item">
+            <div class="status-meta">
+              <span class="status-dot" style="background:#6366f1"></span>
+              <span class="status-name">Active</span>
+              <span class="status-count">{{ active_count }}</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" style="background:#6366f1; width:{% if project_count %}{% widthratio active_count project_count 100 %}{% else %}0{% endif %}%"></div>
+            </div>
+          </div>
+          <div class="status-item">
+            <div class="status-meta">
+              <span class="status-dot" style="background:#8b5cf6"></span>
+              <span class="status-name">Completed</span>
+              <span class="status-count">{{ complete_count }}</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" style="background:#8b5cf6; width:{% if project_count %}{% widthratio complete_count project_count 100 %}{% else %}0{% endif %}%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3 class="panel-title">Quick actions</h3>
+        </div>
+        <div class="quick-actions">
+          <a href="{% url 'add_supervisor' %}" class="qa-item">
+            <span class="qa-icon" style="background:#eff6ff; color:#1d4ed8">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg>
+            </span>
+            <div class="qa-text">
+              <span class="qa-title">Add supervisor</span>
+              <span class="qa-sub">Register a new supervisor</span>
+            </div>
+            <svg class="qa-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          <a href="{% url 'create_phase' %}" class="qa-item">
+            <span class="qa-icon" style="background:#f0fdf4; color:#15803d">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </span>
+            <div class="qa-text">
+              <span class="qa-title">Create phase</span>
+              <span class="qa-sub">Add a new project phase</span>
+            </div>
+            <svg class="qa-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          <a href="{% url 'make_announcement' %}" class="qa-item">
+            <span class="qa-icon" style="background:#fff7ed; color:#c2410c">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.46 2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16z"/></svg>
+            </span>
+            <div class="qa-text">
+              <span class="qa-title">Announcement</span>
+              <span class="qa-sub">Notify students & supervisors</span>
+            </div>
+            <svg class="qa-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          <a href="{% url 'upload_resource' %}" class="qa-item">
+            <span class="qa-icon" style="background:#fdf4ff; color:#7e22ce">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+            </span>
+            <div class="qa-text">
+              <span class="qa-title">Upload resource</span>
+              <span class="qa-sub">Share files with students</span>
+            </div>
+            <svg class="qa-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+          <a href="{% url 'registration_settings' %}" class="qa-item">
+            <span class="qa-icon" style="background:#f8fafc; color:#475569">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </span>
+            <div class="qa-text">
+              <span class="qa-title">Project settings</span>
+              <span class="qa-sub">Manage registration settings</span>
+            </div>
+            <svg class="qa-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </div><!-- /bottom-row -->
+  </div><!-- /dashboard-wrapper -->
+</div>
+
+<style>
+  /* ── Layout ── */
+  .content {
+    margin-left: 240px;
+    margin-top: 60px;
+    min-height: calc(100vh - 60px);
+    background: #f4f6f9;
+    padding: 28px 32px;
+    box-sizing: border-box;
+  }
+
+  .dashboard-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ── Page Header ── */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .page-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 4px;
+  }
+
+  .page-sub {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn-primary-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #2563eb;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .btn-primary-action:hover { background: #1d4ed8; color: #fff; }
+
+  .btn-secondary-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .btn-secondary-action:hover { background: #f8fafc; color: #374151; }
+
+  /* ── Stats Grid ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .stat-card {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e8edf3;
+    padding: 18px 20px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    transition: box-shadow 0.18s, transform 0.18s;
+  }
+  .stat-card:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    transform: translateY(-2px);
+  }
+
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+
+  .icon-blue   { background: #eff6ff; color: #2563eb; }
+  .icon-teal   { background: #f0fdfa; color: #0d9488; }
+  .icon-purple { background: #faf5ff; color: #7c3aed; }
+  .icon-green  { background: #f0fdf4; color: #16a34a; }
+  .icon-amber  { background: #fffbeb; color: #d97706; }
+  .icon-coral  { background: #fff1f2; color: #e11d48; }
+  .icon-gray   { background: #f8fafc; color: #475569; }
+  .icon-indigo { background: #eef2ff; color: #4f46e5; }
+
+  .stat-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 12px;
+  }
+
+  .stat-value {
+    font-size: 30px;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+
+  .stat-footer {
+    border-top: 1px solid #f1f5f9;
+    padding-top: 10px;
+    margin-top: auto;
+  }
+
+  .stat-footer a {
+    font-size: 12px;
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .stat-footer a:hover { text-decoration: underline; }
+
+  /* ── Bottom Row ── */
+  .bottom-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 768px) {
+    .bottom-row { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .content { margin-left: 0; padding: 16px; }
+  }
+
+  /* ── Panels ── */
+  .panel {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e8edf3;
+    padding: 20px 22px;
+  }
+
+  .panel-header { margin-bottom: 18px; }
+
+  .panel-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+  }
+
+  /* ── Status List ── */
+  .status-list { display: flex; flex-direction: column; gap: 14px; }
+
+  .status-item { display: flex; flex-direction: column; gap: 6px; }
+
+  .status-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .status-name {
+    font-size: 13px;
+    color: #374151;
+    flex: 1;
+  }
+
+  .status-count {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  .progress-track {
+    height: 6px;
+    background: #f1f5f9;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.5s ease;
+    min-width: 4px;
+  }
+
+  /* ── Quick Actions ── */
+  .quick-actions { display: flex; flex-direction: column; gap: 4px; }
+
+  .qa-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 8px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .qa-item:hover { background: #f8fafc; }
+
+  .qa-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .qa-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex: 1;
+  }
+
+  .qa-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1e293b;
+  }
+
+  .qa-sub {
+    font-size: 11px;
+    color: #94a3b8;
+  }
+
+  .qa-arrow {
+    color: #cbd5e1;
+    flex-shrink: 0;
+  }
+</style>
 
 {% endblock %}

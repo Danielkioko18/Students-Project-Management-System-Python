@@ -1,74 +1,100 @@
 {% load static %}
+{% url "cordinator_dashboard" as dashboard_url %}
+{% url 'view_supervisors' as supervisors_url %}
+{% url 'registered_students' as students_url %}
+{% url 'view_projects' as uploaded_titles_url %}
+{% url 'approved_titles' as approved_titles_url %}
+{% url 'pending_titles' as pending_titles_url %}
+{% url 'rejected_titles' as rejected_titles_url %}
+{% url 'completed_projects' as completed_projects_url %}
+{% url 'create_phase' as create_phase_url %}
+{% url 'view_phases' as view_phases_url %}
+{% url 'view_milestones' as milestones_url %}
+{% url 'make_announcement' as announcement_url %}
+{% url 'upload_resource' as upload_resource_url %}
+{% url 'registration_settings' as settings_url %}
+{% url 'coordinator_profile' as profile_url %}
+
+{% with request.path as current_path %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light flex-md-column sidebar column-1">
-  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav flex-column">
       <li class="nav-item">
-        <a class="nav-link" href="{% url "cordinator_dashboard" %}">
+        <a class="nav-link {% if current_path == dashboard_url %}active{% endif %}" href="{{ dashboard_url }}">
           <i class="fas fa-tachometer-alt"></i> Dashboard
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'view_supervisors' %}">
+        <a class="nav-link {% if current_path == supervisors_url %}active{% endif %}" href="{{ supervisors_url }}">
           <i class="fas fa-users"></i> Supervisors
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'registered_students' %}">
+        <a class="nav-link {% if current_path == students_url %}active{% endif %}" href="{{ students_url }}">
           <i class="fas fa-graduation-cap"></i> Students
         </a>
       </li>
+
+      <!-- Projects submenu -->
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'registration_settings' %}">
-          <i class="fas fa-cog"></i> Project Settings
+        <a class="nav-link d-flex justify-content-between align-items-center {% if current_path == uploaded_titles_url or current_path == approved_titles_url or current_path == pending_titles_url or current_path == rejected_titles_url or current_path == completed_projects_url %}active{% endif %} collapsed" href="#projectsMenu" data-bs-toggle="collapse" role="button" aria-expanded="{% if current_path == uploaded_titles_url or current_path == approved_titles_url or current_path == pending_titles_url or current_path == rejected_titles_url or current_path == completed_projects_url %}true{% else %}false{% endif %}" aria-controls="projectsMenu">
+          <span><i class="fas fa-tasks"></i> Projects</span>
+          <span class="fas fa-chevron-down"></span>
         </a>
+        <div class="collapse{% if current_path == uploaded_titles_url or current_path == approved_titles_url or current_path == pending_titles_url or current_path == rejected_titles_url or current_path == completed_projects_url %} show{% endif %}" id="projectsMenu">
+          <ul class="nav flex-column ms-3 submenu">
+            <li class="nav-item"><a class="nav-link {% if current_path == uploaded_titles_url %}active{% endif %}" href="{{ uploaded_titles_url }}">Uploaded Titles</a></li>
+            <li class="nav-item"><a class="nav-link {% if current_path == approved_titles_url %}active{% endif %}" href="{{ approved_titles_url }}">Approved Titles</a></li>
+            <li class="nav-item"><a class="nav-link {% if current_path == pending_titles_url %}active{% endif %}" href="{{ pending_titles_url }}">Pending Approval</a></li>
+            <li class="nav-item"><a class="nav-link {% if current_path == rejected_titles_url %}active{% endif %}" href="{{ rejected_titles_url }}">Rejected Titles</a></li>
+            <li class="nav-item"><a class="nav-link {% if current_path == completed_projects_url %}active{% endif %}" href="{{ completed_projects_url }}">Completed Projects</a></li>
+          </ul>
+        </div>
       </li>
-      <!-- Projects Dropdown -->
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="projectsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="fas fa-tasks"></i> Projects
-        </a>
-        <ul class="dropdown-menu" aria-labelledby="projectsDropdown">
-          <li><a class="dropdown-item" href="{% url 'view_projects' %}">Uploaded Titles</a></li>
-          <li><a class="dropdown-item" href="{% url 'approved_titles' %}">Approved Titles</a></li>
-          <li><a class="dropdown-item" href="{% url 'pending_titles' %}">Pending Approval</a></li>          
-          <li><a class="dropdown-item" href="{% url 'rejected_titles' %}">Rejected Titles</a></li>
-          <li><a class="dropdown-item" href="{% url 'completed_projects' %}">Completed Projects</a></li>
-        </ul>
-      </li>
-      <!-- Phases Dropdown -->
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="phasesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="fas fa-cubes"></i> Phases
-        </a>
-        <ul class="dropdown-menu" aria-labelledby="phasesDropdown">
-          <li><a class="dropdown-item" href="{% url 'create_phase' %}">Add New Phase</a></li>
-          <li><a class="dropdown-item" href="{% url 'view_phases' %}">View All Phases</a></li>
-        </ul>
-      </li>
-      <!-- Other Menu Items -->
+
+      <!-- Phases submenu -->
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'view_milestones' %}">
+        <a class="nav-link d-flex justify-content-between align-items-center {% if current_path == create_phase_url or current_path == view_phases_url %}active{% endif %} collapsed" href="#phasesMenu" data-bs-toggle="collapse" role="button" aria-expanded="{% if current_path == create_phase_url or current_path == view_phases_url %}true{% else %}false{% endif %}" aria-controls="phasesMenu">
+          <span><i class="fas fa-cubes"></i> Phases</span>
+          <span class="fas fa-chevron-down"></span>
+        </a>
+        <div class="collapse{% if current_path == create_phase_url or current_path == view_phases_url %} show{% endif %}" id="phasesMenu">
+          <ul class="nav flex-column ms-3 submenu">
+            <li class="nav-item"><a class="nav-link {% if current_path == create_phase_url %}active{% endif %}" href="{{ create_phase_url }}">Add New Phase</a></li>
+            <li class="nav-item"><a class="nav-link {% if current_path == view_phases_url %}active{% endif %}" href="{{ view_phases_url }}">View All Phases</a></li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {% if current_path == milestones_url %}active{% endif %}" href="{{ milestones_url }}">
           <i class="fas fa-chart-bar"></i> Project Progress
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'make_announcement' %}">
+        <a class="nav-link {% if current_path == announcement_url %}active{% endif %}" href="{{ announcement_url }}">
           <i class="fas fa-bullhorn"></i> Announcements
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'upload_resource' %}">
+        <a class="nav-link {% if current_path == upload_resource_url %}active{% endif %}" href="{{ upload_resource_url }}">
           <i class="fas fa-upload"></i> Upload Resource
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'coordinator_profile' %}">
+        <a class="nav-link {% if current_path == settings_url %}active{% endif %}" href="{{ settings_url }}">
+          <i class="fas fa-cog"></i> Project Settings
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if current_path == profile_url %}active{% endif %}" href="{{ profile_url }}">
           <i class="fas fa-user"></i> My Profile
         </a>
       </li>
     </ul>
   </div>
 </nav>
+{% endwith %}
