@@ -6,39 +6,45 @@
 
 {% include "column1_cord.html" %}
 
-<div class="main-content-container container-fluid px-4 my-auto h-100">
-    <div class="row no-gutters h-100">
-         <div class="col-lg-5 col-md-5 auth-form mx-auto my-auto">
-            <div class="card mt-4 border-info rounded">
+<div class="main-content-container container-fluid px-3 my-auto py-3">
+    <div class="row no-gutters justify-content-center">
+         <div class="col-lg-4 auth-form mx-auto">
+            <div class="card mt-5 border-info rounded">
                 <div class="card-header">
-                    <h4 class="text-center mb-4"><Strong>UpdatePhase</Strong></h4>
+                    <h4 class="text-center mb-1"><Strong>UpdatePhase</Strong></h4>
                 </div>
                 <div class="card-body">
                     <!-- edit_phase.html -->
 
+                    {% if error_message %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error_message }}
+                        </div>
+                    {% endif %}
+
                     <form action="{% url "edit_phase" phase.id%}" method="post">
                         {% csrf_token %}
-                        <div class="form-group">
-                            <label for="name">Name:</label>
-                            <input type="text" id="name" name="name" value="{{ phase.name }}" required>
+                        <div class="form-group mb-1">
+                            <label for="name" class="form-label"><strong>Name</strong></label>
+                            <input type="text" id="name" name="name" class="form-control" value="{{ phase.name }}" placeholder="Phase name" required>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="description">Description:</label>
-                            <textarea id="description" name="description" rows="5" required>{{ phase.description }}</textarea>                    
+                        <div class="form-group mb-1">
+                            <label for="description" class="form-label"><strong>Description</strong></label>
+                            <textarea id="description" name="description" class="form-control" rows="5" placeholder="Phase description" required>{{ phase.description }}</textarea>                    
                         </div>
 
-                        <div class="form-group">
-                            <label for="order">Order:</label>
-                            <input type="number" id="order" name="order" value="{{ phase.order }}" min="1" required>
+                        <div class="form-group mb-1">
+                            <label for="order" class="form-label"><strong>Order</strong></label>
+                            <input type="number" id="order" name="order" class="form-control" value="{{ phase.order }}" min="1" placeholder="Phase order" required>
                         </div>
 
-                        <div class="form-group">
-                            <label for="deadline_date">Deadline:</label>
-                            <input type="date" id="deadline_date" name="deadline_date" value="{{ phase.deadline_date }}">
+                        <div class="form-group mb-1">
+                            <label for="deadline_date" class="form-label"><strong>Deadline</label>
+                            <input type="date" id="deadline_date" name="deadline_date" class="form-control" value="{{ deadline_date|default:phase.deadline_date|date:'Y-m-d' }}">
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary btn-block">Save</button>
                     </form>
 
                 </div>
@@ -46,5 +52,10 @@
          </div>
     </div>
 </div>
+<script>
+    // Set minimum value for deadline date field to today's date
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementById("deadline_date").setAttribute("min", today);
+</script>
 
 {% endblock %}

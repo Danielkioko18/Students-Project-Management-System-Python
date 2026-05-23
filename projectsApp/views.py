@@ -1336,31 +1336,54 @@ def reject_title(request, project_id):
 @coordinator_required
 def create_phase(request):
     if request.method == 'POST':
-        name = request.POST.get('name')
-        description = request.POST.get('description')
-        order = int(request.POST.get('order'))
-        deadline_date = request.POST.get('deadline_date')  # Optional, can be blank
+        name = request.POST.get('name', '').strip()
+        description = request.POST.get('description', '').strip()
+        order_raw = request.POST.get('order', '').strip()
+        deadline_date = request.POST.get('deadline_date', '') or None
 
-        # Basic validation (improve as needed)
-        if not name or not description or order <= 0:
-            # Handle invalid data (e.g., display error messages)
-            error_message = 'Please fill all required fields and ensure order is a positive integer.'
-            context = {
-                'error_message':error_message
-            }
+        context = {
+            'name': name,
+            'description': description,
+            'order': order_raw,
+            'deadline_date': deadline_date,
+        }
+
+        if not name or not description or not order_raw:
+            context['error_message'] = 'Please fill all required fields.'
             return render(request, 'cordinator/add_phase.html', context)
 
-        # Create and save the phase
-        phase = Phases.objects.create(
-            name=name,
-            description=description,
-            order=order,
-            deadline_date=deadline_date 
-        )
-        phase.save()
+        try:
+            order = int(order_raw)
+            if order <= 0:
+                raise ValueError
+        except ValueError:
+            context['error_message'] = 'Order must be a positive integer.'
+            return render(request, 'cordinator/add_phase.html', context)
 
-        # Redirect to success page or list of phases
-        return redirect('create_phase')
+        try:
+            phase = Phases.objects.create(
+                name=name,
+                description=description,
+                order=order,
+                deadline_date=deadline_date
+            )
+            phase.save()
+        except IntegrityError as e:
+            error_message = 'A phase with that order or name already exists. Please choose a unique order.'
+            if 'order' in str(e).lower():
+                error_message = 'Phase order must be unique. Please choose another order number.'
+            elif 'name' in str(e).lower():
+                error_message = 'Phase name must be unique. Please choose another name.'
+            context['error_message'] = error_message
+            return render(request, 'cordinator/add_phase.html', context)
+
+        context['success_message'] = 'Phase added successfully.'
+        # Clear form values after success
+        context['name'] = ''
+        context['description'] = ''
+        context['order'] = ''
+        context['deadline_date'] = ''
+        return render(request, 'cordinator/add_phase.html', context)
     else:
         return render(request, 'cordinator/add_phase.html')  # Render the form for GET requests
 
@@ -1388,20 +1411,46 @@ def view_phases(request):
 @coordinator_required
 def edit_phase(request, phase_id):
     phase = get_object_or_404(Phases, pk=phase_id)
+    context = {'phase': phase}
     
     if request.method == 'POST':
         name = request.POST.get('name')
         description = request.POST.get('description')
-        order = request.POST.get('order')
+        order_raw = request.POST.get('order')
         deadline_date = request.POST.get('deadline_date')
+
+        context.update({
+            'name': name,
+            'description': description,
+            'order': order_raw,
+            'deadline_date': deadline_date,
+        })
+
+        try:
+            order = int(order_raw)
+        except (TypeError, ValueError):
+            context['error_message'] = 'Order must be a valid integer.'
+            return render(request, 'cordinator/edit_phase.html', context)
+
+        if order <= 0:
+            context['error_message'] = 'Order must be greater than zero.'
+            return render(request, 'cordinator/edit_phase.html', context)
+
+        if Phases.objects.filter(order=order).exclude(pk=phase.id).exists():
+            context['error_message'] = 'This order number is already used by another phase.'
+            return render(request, 'cordinator/edit_phase.html', context)
 
         phase.name = name
         phase.description = description
         phase.order = order
         phase.deadline_date = deadline_date
-        phase.save()
+
+        try:
+            phase.save()
+        except IntegrityError:
+            context['error_message'] = 'Unable to save phase. Please ensure the order is unique and try again.'
+            return render(request, 'cordinator/edit_phase.html', context)
 
         return redirect('view_phases')
 
-    context = {'phase': phase}
     return render(request, 'cordinator/edit_phase.html', context)
