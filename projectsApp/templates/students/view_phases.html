@@ -84,12 +84,14 @@
                   </tbody>
                 </table>
                 <!-- Upload Document form -->
-                {% if not phase.approved_documents_exist%}
+                {% if not phase.approved_documents_exist %}
                 <div class="row mb-3">
                   <div class="col-md-12">
                     {% if error_message %}
-                    <p class="text-danger">{{error_message}}</p>
+                      <div class="alert alert-warning">{{ error_message }}</div>
                     {% endif %}
+
+                    {% if upload_allowed %}
                     <form
                       action="{% url 'upload_doc' %}"
                       method="post"
@@ -131,8 +133,14 @@
                         Upload
                       </button>
                     </form>
+                    {% else %}
+                    <div class="alert alert-secondary text-center">
+                      Uploads are disabled until your supervisor approves your title details.
+                    </div>
+                    {% endif %}
+
                     {% if error %}
-                    <small class="text-danger">{{error}}</small>
+                    <small class="text-danger">{{ error }}</small>
                     {% endif %}
                   </div>
                 </div>

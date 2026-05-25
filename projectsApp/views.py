@@ -357,12 +357,23 @@ def revise_title(request):
 def my_uploads(request):
     student = request.user
     phases = Phases.objects.all().order_by('order')
+    proposal_exists = Proposal.objects.filter(student=student).exists()
 
     for phase in phases:
         phase.documents.set(Documents.objects.filter(phase=phase, student=student).order_by('-uploaded_at'))
         phase.approved_documents_exist = Documents.objects.filter(phase=phase, student=student, status='approved').exists()
 
-    context = {'phases': phases}
+    context = {
+        'phases': phases,
+        'upload_allowed': proposal_exists,
+    }
+
+    if not proposal_exists:
+        context['error_message'] = (
+            'Your supervisor has not yet accepted your title details. '
+            'You cannot upload phase documents until the title has been approved.'
+        )
+
     return render(request, 'students/view_phases.html', context)
 
 
@@ -371,41 +382,59 @@ def my_uploads(request):
 @student_required
 def upload_file(request):
     student = request.user
-    proposal = get_object_or_404(Proposal, student=student)
+    proposal = Proposal.objects.filter(student=student).first()
     error = None
+    upload_allowed = True
 
     if request.method == 'POST':
-        # Access uploaded file and explanation from request.POST and request.FILES
-        document_file = request.FILES.get('document_file')
-        explanation = request.POST.get('explanation')
-        selected_phase_id = request.POST.get('phase')
-
-        if document_file:
-            if document_file.name.endswith('.pdf'):
-                try:
-                    # Retrieve the selected phase object
-                    phase = Phases.objects.get(pk=selected_phase_id)
-
-                    # Create a new Documents object and save it
-                    document = Documents(
-                        student=request.user,
-                        proposal=proposal,
-                        phase=phase,
-                        file=document_file,
-                        comment=explanation
-                    )
-                    document.save()
-                    return redirect('my_phases')
-                except Exception as e:
-                    error = f"Error uploading document: {e}"
-            else:
-                error = "Error: Only PDF files are allowed. Please choose a PDF file to upload"
-                return HttpResponseBadRequest("Error: Only PDF files are allowed. Please choose a PDF file to upload")
+        if not proposal:
+            error = (
+                'Your supervisor has not yet accepted your title details. '
+                'Please wait until your title is approved before uploading documents.'
+            )
+            upload_allowed = False
         else:
-            error = "Error: No document file uploaded"
+            document_file = request.FILES.get('document_file')
+            explanation = request.POST.get('explanation')
+            selected_phase_id = request.POST.get('phase')
 
-    context = {'proposal': proposal, 'student': student, 'error': error}
-    return render(request, 'students/view_phases.html', context)  # Redirect to document list view
+            if document_file:
+                if document_file.name.endswith('.pdf'):
+                    try:
+                        phase = Phases.objects.get(pk=selected_phase_id)
+                        document = Documents(
+                            student=request.user,
+                            proposal=proposal,
+                            phase=phase,
+                            file=document_file,
+                            comment=explanation
+                        )
+                        document.save()
+                        return redirect('my_phases')
+                    except Exception as e:
+                        error = f"Error uploading document: {e}"
+                else:
+                    error = "Error: Only PDF files are allowed. Please choose a PDF file to upload"
+                    return HttpResponseBadRequest(error)
+            else:
+                error = "Error: No document file uploaded"
+
+    phases = Phases.objects.all().order_by('order')
+    for phase in phases:
+        phase.documents.set(Documents.objects.filter(phase=phase, student=student).order_by('-uploaded_at'))
+        phase.approved_documents_exist = Documents.objects.filter(phase=phase, student=student, status='approved').exists()
+
+    context = {
+        'phases': phases,
+        'student': student,
+        'error': error,
+        'upload_allowed': upload_allowed,
+    }
+
+    if not upload_allowed:
+        context['error_message'] = error
+
+    return render(request, 'students/view_phases.html', context)
 
 
 # anouncements
