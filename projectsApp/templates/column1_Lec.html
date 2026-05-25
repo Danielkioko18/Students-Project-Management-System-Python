@@ -1,52 +1,254 @@
 {% load static %}
-<nav
-  class="navbar navbar-expand-lg navbar-light bg-light flex-md-column sidebar column-1"
->
-  <button
-    class="navbar-toggler"
-    type="button"
-    data-toggle="collapse"
-    data-target="#navbarNav"
-    aria-controls="navbarNav"
-    aria-expanded="false"
-    aria-label="Toggle navigation"
-  >
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav flex-column">
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'supervisor_dashboard' %}"
-          ><i class="fas fa-chart-line"></i> <strong>Dashboard</strong></a
-        >
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'mystudents' %}"
-          ><i class="fas fa-users"></i> <strong>My Students/Projects</strong></a
-        >
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'milestones' %}"
-          ><i class="fas fa-folder-open"></i>
-          <strong>Student's Uploads</strong></a
-        >
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'announcement' %}"
-          ><i class="fas fa-bullhorn"></i> <strong>Announcements</strong></a
-        >
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'resource_upload' %}"
-          ><i class="fas fa-cloud-upload-alt"></i>
-          <strong>Upload Resource</strong></a
-        >
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'supervisor_profile' %}"
-          ><i class="fas fa-user"></i> <strong>My Profile</strong></a
-        >
-      </li>
-    </ul>
+{% url 'supervisor_dashboard' as dashboard_url %}
+{% url 'mystudents' as mystudents_url %}
+{% url 'milestones' as milestones_url %}
+{% url 'announcement' as announcement_url %}
+{% url 'resource_upload' as resource_upload_url %}
+{% url 'supervisor_profile' as profile_url %}
+
+{% with request.path as current_path %}
+<nav class="sidebar">
+
+  <!-- Branding strip inside sidebar -->
+  <div class="sidebar-brand">
+    <span class="sidebar-role">Supervisor Portal</span>
   </div>
+
+  <div class="sidebar-section-label">Main</div>
+  <ul class="sidebar-nav">
+    <li>
+      <a href="{{ dashboard_url }}" class="sidebar-link {% if current_path == dashboard_url %}active{% endif %}">
+        <span class="sidebar-icon">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+          </svg>
+        </span>
+        <span class="sidebar-text">Dashboard</span>
+      </a>
+    </li>
+    <li>
+      <a href="{{ mystudents_url }}" class="sidebar-link {% if current_path == mystudents_url %}active{% endif %}">
+        <span class="sidebar-icon">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </span>
+        <span class="sidebar-text">My Students</span>
+      </a>
+    </li>
+    <li>
+      <a href="{{ milestones_url }}" class="sidebar-link {% if current_path == milestones_url %}active{% endif %}">
+        <span class="sidebar-icon">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+          </svg>
+        </span>
+        <span class="sidebar-text">Student Uploads</span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="sidebar-section-label">Communication</div>
+  <ul class="sidebar-nav">
+    <li>
+      <a href="{{ announcement_url }}" class="sidebar-link {% if current_path == announcement_url %}active{% endif %}">
+        <span class="sidebar-icon">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.46 2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16z"/>
+          </svg>
+        </span>
+        <span class="sidebar-text">Announcements</span>
+      </a>
+    </li>
+    <li>
+      <a href="{{ resource_upload_url }}" class="sidebar-link {% if current_path == resource_upload_url %}active{% endif %}">
+        <span class="sidebar-icon">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="16 16 12 12 8 16"/>
+            <line x1="12" y1="12" x2="12" y2="21"/>
+            <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+          </svg>
+        </span>
+        <span class="sidebar-text">Upload Resource</span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="sidebar-section-label">Account</div>
+  <ul class="sidebar-nav">
+    <li>
+      <a href="{{ profile_url }}" class="sidebar-link {% if current_path == profile_url %}active{% endif %}">
+        <span class="sidebar-icon">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </span>
+        <span class="sidebar-text">My Profile</span>
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'logout' %}" class="sidebar-link sidebar-link--logout">
+        <span class="sidebar-icon">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </span>
+        <span class="sidebar-text">Logout</span>
+      </a>
+    </li>
+  </ul>
+
 </nav>
+
+<style>
+  /* ── Reset body spacing ── */
+  body {
+    padding-top: 60px !important; /* match exact header height */
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    position: fixed;
+    top: 60px; /* sit exactly below the header */
+    left: 0;
+    width: 230px;
+    height: calc(100vh - 60px);
+    background: #ffffff;
+    border-right: 1px solid #e8edf3;
+    padding: 20px 12px 24px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* ── Branding strip ── */
+  .sidebar-brand {
+    padding: 0 8px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    margin-bottom: 16px;
+  }
+
+  .sidebar-role {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #94a3b8;
+  }
+
+  /* ── Section labels ── */
+  .sidebar-section-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #b0bec5;
+    padding: 14px 10px 6px;
+    margin-top: 4px;
+  }
+
+  /* ── Nav list ── */
+  .sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  /* ── Links ── */
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #4b5563;
+    font-size: 13.5px;
+    font-weight: 500;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .sidebar-link:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+    text-decoration: none;
+  }
+
+  .sidebar-link.active {
+    background: #eff6ff;
+    color: #2563eb;
+    font-weight: 600;
+  }
+
+  .sidebar-link.active .sidebar-icon {
+    color: #2563eb;
+  }
+
+  /* ── Logout link ── */
+  .sidebar-link--logout {
+    color: #ef4444;
+    margin-top: 8px;
+  }
+  .sidebar-link--logout:hover {
+    background: #fff1f2;
+    color: #dc2626;
+  }
+  .sidebar-link--logout .sidebar-icon {
+    color: #ef4444;
+  }
+
+  /* ── Icon wrapper ── */
+  .sidebar-icon {
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #94a3b8;
+    transition: color 0.15s;
+  }
+
+  .sidebar-link:hover .sidebar-icon {
+    color: #475569;
+  }
+
+  /* ── Content offset fix ── */
+  .content {
+    margin-left: 230px !important;
+    margin-top: 0 !important;   /* body padding-top handles the header gap */
+    padding: 24px 28px !important;
+    background: #f4f6f9;
+    min-height: calc(100vh - 60px);
+    box-sizing: border-box;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .sidebar {
+      width: 100%;
+      height: auto;
+      position: relative;
+      top: 0;
+      border-right: none;
+      border-bottom: 1px solid #e8edf3;
+    }
+    .content {
+      margin-left: 0 !important;
+    }
+  }
+</style>
+{% endwith %}
