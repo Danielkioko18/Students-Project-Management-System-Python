@@ -18,11 +18,11 @@
       <div class="header-actions">
         <a href="{% url 'announcement' %}" class="btn-primary-action">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-          New Announcement
+          <strong>New Announcement</strong>
         </a>
         <a href="{% url 'mystudents' %}" class="btn-secondary-action">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-          View Students
+          <strong>View Students</strong>
         </a>
       </div>
     </div>
@@ -36,7 +36,7 @@
         </div>
         <div class="stat-body">
           <span class="stat-value">{{ project_count }}</span>
-          <span class="stat-label">Allocated Projects</span>
+          <span class="stat-label"><strong>Allocated Projects</strong></span>
         </div>
         <div class="stat-footer">
           <a href="{% url 'mystudents' %}">View students →</a>
@@ -49,7 +49,7 @@
         </div>
         <div class="stat-body">
           <span class="stat-value">{{ announcement_count }}</span>
-          <span class="stat-label">Announcements Made</span>
+          <span class="stat-label"><strong>Announcements Made</strong></span>
         </div>
         <div class="stat-footer">
           <a href="{% url 'announcement' %}">Make new →</a>
@@ -62,7 +62,7 @@
         </div>
         <div class="stat-body">
           <span class="stat-value">{{ phases|length }}</span>
-          <span class="stat-label">Active Phases</span>
+          <span class="stat-label"><strong>Active Phases</strong></span>
         </div>
         <div class="stat-footer">
           <a href="{% url 'mystudents' %}">View details →</a>
@@ -75,7 +75,7 @@
         </div>
         <div class="stat-body">
           <span class="stat-value">{{ upload_count|default:"0" }}</span>
-          <span class="stat-label">Student Uploads</span>
+          <span class="stat-label"><strong>Student Uploads</strong></span>
         </div>
         <div class="stat-footer">
           <a href="{% url 'milestones' %}">View files →</a>
