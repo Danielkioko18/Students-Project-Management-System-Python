@@ -91,7 +91,7 @@
                       <div class="alert alert-warning">{{ error_message }}</div>
                     {% endif %}
 
-                    {% if upload_allowed %}
+                    {% if phase.upload_allowed %}
                     <form
                       action="{% url 'upload_doc' %}"
                       method="post"
@@ -135,7 +135,11 @@
                     </form>
                     {% else %}
                     <div class="alert alert-secondary text-center">
-                      Uploads are disabled until your supervisor approves your title details.
+                      {% if upload_allowed %}
+                        This phase is blocked until the previous phase is approved by your supervisor.
+                      {% else %}
+                        Uploads are disabled until your supervisor approves your title details.
+                      {% endif %}
                     </div>
                     {% endif %}
 

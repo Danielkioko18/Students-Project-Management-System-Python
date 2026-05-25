@@ -352,6 +352,13 @@ def revise_title(request):
         return render(request, 'students/revise_title.html', context)
 
 
+def _is_previous_phase_completed(student, phase):
+    previous_phase = Phases.objects.filter(order__lt=phase.order).order_by('-order').first()
+    if not previous_phase:
+        return True
+    return Documents.objects.filter(phase=previous_phase, student=student, status='approved').exists()
+
+
 # view phases
 @student_required
 def my_uploads(request):
@@ -362,6 +369,7 @@ def my_uploads(request):
     for phase in phases:
         phase.documents.set(Documents.objects.filter(phase=phase, student=student).order_by('-uploaded_at'))
         phase.approved_documents_exist = Documents.objects.filter(phase=phase, student=student, status='approved').exists()
+        phase.upload_allowed = proposal_exists and _is_previous_phase_completed(student, phase)
 
     context = {
         'phases': phases,
@@ -402,15 +410,24 @@ def upload_file(request):
                 if document_file.name.endswith('.pdf'):
                     try:
                         phase = Phases.objects.get(pk=selected_phase_id)
-                        document = Documents(
-                            student=request.user,
-                            proposal=proposal,
-                            phase=phase,
-                            file=document_file,
-                            comment=explanation
-                        )
-                        document.save()
-                        return redirect('my_phases')
+                        if not _is_previous_phase_completed(student, phase):
+                            error = (
+                                'You must complete the previous phase before uploading this phase. '
+                                'Please wait until your supervisor approves the previous upload.'
+                            )
+                            upload_allowed = False
+                        else:
+                            document = Documents(
+                                student=request.user,
+                                proposal=proposal,
+                                phase=phase,
+                                file=document_file,
+                                comment=explanation
+                            )
+                            document.save()
+                            return redirect('my_phases')
+                    except Phases.DoesNotExist:
+                        error = 'Selected phase does not exist.'
                     except Exception as e:
                         error = f"Error uploading document: {e}"
                 else:
@@ -423,6 +440,7 @@ def upload_file(request):
     for phase in phases:
         phase.documents.set(Documents.objects.filter(phase=phase, student=student).order_by('-uploaded_at'))
         phase.approved_documents_exist = Documents.objects.filter(phase=phase, student=student, status='approved').exists()
+        phase.upload_allowed = (proposal is not None) and _is_previous_phase_completed(student, phase)
 
     context = {
         'phases': phases,
