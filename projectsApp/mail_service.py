@@ -36,5 +36,3 @@ def send_email(recipient_email, subject, message):
         
         # Quit the SMTP session
         server.quit()
-
-    print("Email sent successfully!")
