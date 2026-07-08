@@ -7,108 +7,393 @@
 {% include 'column1_Lec.html' %}
 
 <div class="content">
-   <div class="container-fluid">
-        <div class="row">    
-            {% for document in documents %}
-                <div class="card mb-5 border-info">
-                    <div class="card-body">
-                        <h5><b>Uploaded At:</b> {{ document.uploaded_at }}</h5>
-                        <h5><b>Comment:</b> {{ document.comment|title }}</h5>
-                        <h5><b>Status: </b>{{ document.status|title }}</h5>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pdfModal{{ document.id }}">Preview PDF</button>
-                        {% if document.status != 'approved' %}
-                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#approveModal{{ document.id }}">
-                                Approve
-                            </button>
-                            
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#requestRevisionModal{{ document.id }}">
-                                Request Revision
-                            </button>
-                        
-                        {% endif %}
-                    </div>
-                </div>
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">Student Uploads</h2>
+      <p class="page-sub">Review and manage documents submitted by your students.</p>
+    </div>
+  </div>
 
-                <!-- Request Revision modal -->
-                <div class="modal fade" id="requestRevisionModal{{ document.id }}" tabindex="-1" role="dialog" aria-labelledby="requestRevisionModalLabel{{ document.id }}" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="requestRevisionModalLabel{{ document.id }}">Request Revision</h5>
-                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <h4 class="text-danger" >Please provide a reason for revision</h4>
-                                <form action="." method="post">
-                                    {% csrf_token %}
-                                    <div class="form-group">
-                                        <input class="form-control" type="" value="{{document.id}}" style="display:none;">
-                                    </div>
-                                    <div class="form-group">
-                                        <textarea  id="reason" placeholder="Reason for revision......." name="reason" rows="4" required></textarea>
-                                    </div>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End of Request Revision modal -->
+  {% if documents %}
+  <div class="doc-grid">
+    {% for document in documents %}
+    <div class="doc-card">
 
-                <!-- Approve modal--> 
-                <div class="modal fade" id="approveModal{{ document.id }}" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel{{ document.id }}" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title text-center" id="approveModalLabel{{ document.id }}">Confirm Approval</h5>
-                          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <p><strong>Are you sure you want to approve this document? {{ document.id }}</strong></p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <form action="{% url "approve_document" %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="approve" value="true">
-                                <input type="hidden" name="document_id" value="{{ document.id }}">
-                                <button type="submit" class="btn btn-success">Approve</button>
-                            </form>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-                <!-- End Of approve modal-->
-                {%empty%}
-                   <h5>The student Has Not Uploaded any documents in this phase yet </h5>
-            {% endfor %}
+      <!-- Card Header -->
+      <div class="doc-card-header">
+        <div class="doc-icon">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
         </div>
-   </div>
+        <div class="doc-info">
+          <span class="doc-title">Document #{{ document.id }}</span>
+          <span class="doc-date">{{ document.uploaded_at|date:"d M Y, H:i" }}</span>
+        </div>
+        {% if document.status == 'approved' %}
+          <span class="badge badge-approved">Approved</span>
+        {% elif document.status == 'revision' %}
+          <span class="badge badge-revision">Revision</span>
+        {% else %}
+          <span class="badge badge-pending">Pending</span>
+        {% endif %}
+      </div>
+
+      <!-- Comment -->
+      {% if document.comment %}
+      <div class="doc-comment">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        {{ document.comment|title }}
+      </div>
+      {% endif %}
+
+      <!-- Actions -->
+      <div class="doc-actions">
+        <button class="action-btn action-btn--view" data-bs-toggle="modal" data-bs-target="#pdfModal{{ document.id }}">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+          </svg>
+          Preview PDF
+        </button>
+
+        {% if document.status != 'approved' %}
+        <button class="action-btn action-btn--approve" data-bs-toggle="modal" data-bs-target="#approveModal{{ document.id }}">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Approve
+        </button>
+        <button class="action-btn action-btn--revise" data-bs-toggle="modal" data-bs-target="#requestRevisionModal{{ document.id }}">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          Request Revision
+        </button>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Request Revision Modal -->
+    <div class="modal fade" id="requestRevisionModal{{ document.id }}" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content styled-modal">
+          <div class="modal-header styled-modal-header">
+            <h5 class="modal-title">Request Revision</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" style="padding: 20px 24px;">
+            <p style="font-size:13px; color:#64748b; margin-bottom:12px;">Provide a clear reason so the student knows what to fix.</p>
+            <form action="." method="post">
+              {% csrf_token %}
+              <input type="hidden" value="{{ document.id }}">
+              <textarea name="reason" rows="4" required placeholder="Describe what needs to be revised..." class="styled-textarea"></textarea>
+              <div class="modal-footer-btns">
+                <button type="button" class="modal-btn modal-btn--cancel" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="modal-btn modal-btn--primary">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Approve Modal -->
+    <div class="modal fade" id="approveModal{{ document.id }}" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content styled-modal">
+          <div class="modal-header styled-modal-header">
+            <h5 class="modal-title">Confirm Approval</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" style="padding: 20px 24px;">
+            <div class="confirm-box">
+              <div class="confirm-icon">
+                <svg width="20" height="20" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
+              <div>
+                <p style="font-size:14px; font-weight:600; color:#1e293b; margin:0 0 4px;">Approve Document #{{ document.id }}?</p>
+                <p style="font-size:13px; color:#64748b; margin:0;">This will mark the document as approved.</p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer" style="border-top:1px solid #f1f5f9; padding:14px 24px;">
+            <button type="button" class="modal-btn modal-btn--cancel" data-bs-dismiss="modal">Cancel</button>
+            <form action="{% url 'approve_document' %}" method="post" style="margin:0;">
+              {% csrf_token %}
+              <input type="hidden" name="approve" value="true">
+              <input type="hidden" name="document_id" value="{{ document.id }}">
+              <button type="submit" class="modal-btn modal-btn--success">Approve</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% empty %}
+    <div class="empty-state">
+      <svg width="48" height="48" fill="none" stroke="#cbd5e1" stroke-width="1.5" viewBox="0 0 24 24">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+      </svg>
+      <h3>No uploads yet</h3>
+      <p>The student has not uploaded any documents in this phase yet.</p>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="empty-state">
+    <svg width="48" height="48" fill="none" stroke="#cbd5e1" stroke-width="1.5" viewBox="0 0 24 24">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+    </svg>
+    <h3>No uploads yet</h3>
+    <p>The student has not uploaded any documents in this phase yet.</p>
+  </div>
+  {% endif %}
+
 </div>
 
+<!-- PDF Preview Modals -->
 {% for document in documents %}
-<div class="modal fade" id="pdfModal{{ document.id }}" tabindex="-1" aria-labelledby="pdfModalLabel{{ document.id }}" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="pdfModalLabel{{ document.id }}">Preview: {{ document.file_name }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-0">
-                <iframe src="{% url 'view_document_preview' document.id %}" style="width:100%; height:75vh; border:0;"></iframe>
-            </div>
-        </div>
+<div class="modal fade" id="pdfModal{{ document.id }}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content styled-modal">
+      <div class="modal-header styled-modal-header">
+        <h5 class="modal-title">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:6px;vertical-align:middle">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          {{ document.file_name|default:"Document Preview" }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <iframe src="{% url 'view_document_preview' document.id %}" style="width:100%; height:80vh; border:0; display:block;"></iframe>
+      </div>
     </div>
+  </div>
 </div>
 {% endfor %}
 
-<link rel="stylesheet" href="{% static 'css/student_dashboard.css' %}">
-<!-- Include Bootstrap JavaScript library -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+  .page-header {
+    margin-bottom: 24px;
+  }
+  .page-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 4px;
+  }
+  .page-sub {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0;
+  }
+
+  /* Grid */
+  .doc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+
+  /* Card */
+  .doc-card {
+    background: #fff;
+    border: 1px solid #e8edf3;
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: box-shadow 0.18s;
+  }
+  .doc-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  }
+
+  /* Card header row */
+  .doc-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .doc-icon {
+    width: 38px;
+    height: 38px;
+    background: #eff6ff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2563eb;
+    flex-shrink: 0;
+  }
+  .doc-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .doc-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+  }
+  .doc-date {
+    font-size: 12px;
+    color: #94a3b8;
+  }
+
+  /* Badges */
+  .badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 3px 10px;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+  .badge-approved { background: #f0fdf4; color: #15803d; }
+  .badge-revision  { background: #fffbeb; color: #b45309; }
+  .badge-pending   { background: #f1f5f9; color: #64748b; }
+
+  /* Comment */
+  .doc-comment {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    font-size: 12px;
+    color: #64748b;
+    background: #f8fafc;
+    border-radius: 7px;
+    padding: 8px 12px;
+  }
+  .doc-comment svg { flex-shrink: 0; margin-top: 1px; }
+
+  /* Action buttons */
+  .doc-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding-top: 4px;
+    border-top: 1px solid #f1f5f9;
+  }
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 13px;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .action-btn--view    { background: #eff6ff; color: #1d4ed8; }
+  .action-btn--view:hover { background: #dbeafe; }
+  .action-btn--approve { background: #f0fdf4; color: #15803d; }
+  .action-btn--approve:hover { background: #dcfce7; }
+  .action-btn--revise  { background: #fff1f2; color: #be123c; }
+  .action-btn--revise:hover { background: #ffe4e6; }
+
+  /* Empty state */
+  .empty-state {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 60px 24px;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e8edf3;
+    text-align: center;
+  }
+  .empty-state h3 { font-size: 15px; font-weight: 600; color: #1e293b; margin: 0; }
+  .empty-state p  { font-size: 13px; color: #64748b; margin: 0; }
+
+  /* Modals */
+  .styled-modal {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    overflow: hidden;
+  }
+  .styled-modal-header {
+    border-bottom: 1px solid #f1f5f9;
+    padding: 16px 24px;
+    background: #f8fafc;
+  }
+  .styled-modal-header .modal-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+  }
+  .styled-textarea {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #374151;
+    resize: vertical;
+    outline: none;
+    font-family: inherit;
+  }
+  .styled-textarea:focus { border-color: #2563eb; }
+
+  .confirm-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .confirm-icon {
+    width: 36px;
+    height: 36px;
+    background: #f0fdf4;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .modal-footer-btns {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .modal-btn {
+    display: inline-flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 7px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .modal-btn--cancel  { background: #f1f5f9; color: #374151; }
+  .modal-btn--cancel:hover { background: #e2e8f0; }
+  .modal-btn--primary { background: #2563eb; color: #fff; }
+  .modal-btn--primary:hover { background: #1d4ed8; }
+  .modal-btn--success { background: #16a34a; color: #fff; }
+  .modal-btn--success:hover { background: #15803d; }
+</style>
 
 {% endblock %}
