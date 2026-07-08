@@ -32,6 +32,7 @@ urlpatterns = [
     path('supervisor/resources/upload/', views.lec_resource, name='resource_upload'),
     path('supervisor/phases/', views.milestones, name='milestones'),
     path('supervisor/student/uploads/<str:phase_id>/<int:student_id>/', views.view_student_uploads, name='view_student_upload'),
+    path('supervisor/document/preview/<int:document_id>/', views.view_document_preview, name='view_document_preview'),
     path('supervisor/student/uploads/approve_document/', views.approve_document, name='approve_document'),
     path('supervisor/my_profile/', views.supervisor_profile, name='supervisor_profile'),
     path('supervisor/my_profile/edit/password/', views.lec_change_password, name='change_password_lec'),

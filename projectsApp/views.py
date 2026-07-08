@@ -760,16 +760,18 @@ def view_student_uploads(request, phase_id, student_id):
     return render(request, 'supervisors/view_student_uploads.html', context)
 
 
-'''# View pdf files by supervisor
-def view_pdf(request, file_id):
-    document = get_object_or_404(Documents, id=file_id)
-    file_path = os.path.join(settings.MEDIA_ROOT, document.file.name)  # Adjust based on how file paths are stored
-    
+@supervisor_required
+def view_document_preview(request, document_id):
+    document = get_object_or_404(Documents, pk=document_id)
+    file_path = document.file.path
+
+    if not os.path.exists(file_path):
+        return HttpResponse('File not found.', status=404)
+
     with open(file_path, 'rb') as pdf_file:
         response = HttpResponse(pdf_file.read(), content_type='application/pdf')
-        response['Content-Disposition'] = 'inline; filename="{}"'.format(document.file.name)
-        return response'''
-    
+        response['Content-Disposition'] = f'inline; filename="{document.file_name or os.path.basename(file_path)}"'
+        return response
 
 
 # approve upload
