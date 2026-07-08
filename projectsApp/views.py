@@ -9,6 +9,7 @@ from django.contrib.auth.hashers import make_password
 from django.conf import settings
 from django.utils import timezone
 from django.http import HttpResponse
+from django.http import Http404, FileResponse
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
@@ -729,7 +730,6 @@ def milestones(request):
 
 
 # View uploads
-
 @supervisor_required
 def view_student_uploads(request, phase_id, student_id):
     phase = get_object_or_404(Phases, pk=phase_id)
@@ -759,19 +759,39 @@ def view_student_uploads(request, phase_id, student_id):
     context = {'phase': phase, 'student': student, 'documents': documents}
     return render(request, 'supervisors/view_student_uploads.html', context)
 
-
+# View document preview
 @supervisor_required
 def view_document_preview(request, document_id):
-    document = get_object_or_404(Documents, pk=document_id)
-    file_path = document.file.path
+    document = get_object_or_404(
+        Documents,
+        pk=document_id,
+        proposal__lecturer=request.user,
+    )
 
-    if not os.path.exists(file_path):
-        return HttpResponse('File not found.', status=404)
+    # Check if the document has a file associated with it
+    if not document.file:
+        raise Http404("File not found.")
 
-    with open(file_path, 'rb') as pdf_file:
-        response = HttpResponse(pdf_file.read(), content_type='application/pdf')
-        response['Content-Disposition'] = f'inline; filename="{document.file_name or os.path.basename(file_path)}"'
-        return response
+    # Open the file in binary mode and create a FileResponse
+    try:
+        pdf_file = document.file.open('rb')
+    except FileNotFoundError:
+        raise Http404("File not found.")
+
+    # Set the filename for the response
+    filename = document.file_name or os.path.basename(document.file.name)
+    response = FileResponse(
+        pdf_file,
+        content_type='application/pdf',
+        as_attachment=False,
+        filename=filename,
+    )
+    response['Content-Disposition'] = f'inline; filename="{filename}"'
+    
+    #tell the browser your own page is allowed to embed this
+    response['X-Frame-Options'] = 'SAMEORIGIN'
+    
+    return response
 
 
 # approve upload
