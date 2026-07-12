@@ -182,7 +182,7 @@ def SignUp(request):
 
 
 
-
+# Student dashboard
 @student_required
 def student_dashboard(request):
     student = request.user
@@ -236,6 +236,7 @@ def student_dashboard(request):
 
 
 # Student profile
+@student_required
 def student_profile(request):
     user = request.user
     context = {
@@ -386,6 +387,38 @@ def my_uploads(request):
     return render(request, 'students/view_phases.html', context)
 
 
+# View document preview for students
+@student_required
+def student_document_preview(request, document_id):
+    document = get_object_or_404(
+        Documents,
+        pk=document_id,
+        student=request.user,  # ensures student can only view their own files
+    )
+
+    # Check if the document has a file associated with it
+    if not document.file:
+        raise Http404("File not found.")
+
+    # Open the file in binary mode and create a FileResponse
+    try:
+        pdf_file = document.file.open('rb')
+    except FileNotFoundError:
+        raise Http404("File not found.")
+
+    # Set the filename for the response
+    filename = document.file_name or os.path.basename(document.file.name)
+    response = FileResponse(
+        pdf_file,
+        content_type='application/pdf',
+        as_attachment=False,
+        filename=filename,
+    )
+    
+    #tell the browser your own page is allowed to embed this
+    response['Content-Disposition'] = f'inline; filename="{filename}"'
+    response['X-Frame-Options'] = 'SAMEORIGIN'
+    return response
 
 # Upload project details to the portal
 @student_required

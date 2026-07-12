@@ -20,6 +20,7 @@ urlpatterns = [
     path('student/my_profile/', views.student_profile, name='student_profile'),
     path('student/my_profile/edit/password/', views.change_password, name='change_password'),
     path('student/my_profile/edit/details/', views.update_details, name='update_details'),
+    path('student/document/preview/<int:document_id>/', views.student_document_preview, name='student_document_preview'),
     
 
 

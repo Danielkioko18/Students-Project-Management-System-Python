@@ -65,12 +65,7 @@
                           <td>{{ document.file_name }}</td>
                           <td>{{ document.status }}</td>
                           <td>
-                            <a
-                              href="{{ document.file.url }}"
-                              target="_blank"
-                              type="application/pdf"
-                              >View</a
-                            >
+                            <button type="button" class="btn btn-link p-0" data-toggle="modal" data-target="#studentPdfModal{{ document.id }}">View</button>
                           </td>
                         </tr>
                       {% endif %}
@@ -164,8 +159,27 @@
     </div>
   </div>
 </div>
+        {% for phase in phases %}
+          {% for document in phase.documents.all %}
+            <div class="modal fade" id="studentPdfModal{{ document.id }}" tabindex="-1" role="dialog" aria-labelledby="studentPdfModalLabel{{ document.id }}" aria-hidden="true">
+              <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="studentPdfModalLabel{{ document.id }}">Preview: {{ document.file_name }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body p-0">
+                    <iframe src="{% url 'student_document_preview' document.id %}" style="width:100%; height:80vh; border:0;" allowfullscreen></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% endfor %}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-<link rel="stylesheet" href="{% static 'css/milestones_lec.css' %}" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+        <link rel="stylesheet" href="{% static 'css/milestones_lec.css' %}" />
 {% endblock %}
