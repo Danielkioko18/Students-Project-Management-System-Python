@@ -16,8 +16,8 @@
           {% if error_message %}
           <div class="alert alert-danger" role="alert">{{ error_message }}</div>
           {% endif %}
-          <!-- update_project_detail -->
 
+          <!-- update_project_detail -->
           <form action="{% url 'revise_title' %}" method="post">
             {% csrf_token %}
             <div class="form-group">
@@ -43,7 +43,7 @@
                 placeholder="Type Your Project Description...."
                 required
               >
-{{ project.description }}</textarea
+                {{ project.description }}</textarea
               >
             </div>
             <div class="form-group">
@@ -57,7 +57,7 @@
                 placeholder="Type Your Objectives...."
                 required
               >
-{{ project.objectives }}</textarea
+                {{ project.objectives }}</textarea
               >
             </div>
 

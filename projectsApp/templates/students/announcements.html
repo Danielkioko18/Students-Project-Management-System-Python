@@ -1,59 +1,216 @@
-<!-- Student Dashboard Template -->
 <title>Announcements</title>
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
 
-<!-- Content Area -->
 {% include 'column1.html' %}
+
 <div class="content">
-  <div class="container-fluid">
-    <div class="row">
-      <h1 class="text-center" style="width: 100%; border-bottom: lightblue">
-        Announcements
-      </h1>
-      <br />
-      <!-- Display lecturer announcements -->
-      {% for announcement in lecturer_announcements %}
-      <div class="card mb-3 border-info">
-        <div class="card-header border-info text-center">
-          <b>From:</b> {{ announcement.sender.name }}
-        </div>
-        <div class="card-body">
-          <h5 class="card-title"><b>Subject:</b></h5>
-          <p class="text-success">{{ announcement.subject }}</p>
-          <h5 class="card-title"><b>Message:</b></h5>
-          <p class="card-text text-info">{{ announcement.message }}</p>
-          {% if not announcement.read %}
-          <p class="text-muted">Unread</p>
-          {% endif %}
-        </div>
-        <div class="card-footer text-muted border-info">
-          {{ announcement.created_at }}
-        </div>
+  <div class="dashboard-wrapper">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">📢 Announcements</h2>
+        <p class="page-sub">Updates and notices from your supervisor and coordinator.</p>
       </div>
-      {% endfor %}
-      <!-- Display coordinator announcements -->
-      {% for announcement in coordinator_announcements %}
-      <div class="card mb-3 border-info">
-        <div class="card-header border-info text-center">
-          <b>From:</b> Projects Coordinator
-        </div>
-        <div class="card-body">
-          <h5 class="card-title"><b>Subject:</b></h5>
-          <p class="text-success">{{ announcement.subject }}</p>
-          <h5 class="card-title"><b>Message:</b></h5>
-          <p class="card-text text-info">{{ announcement.message }}</p>
-          {% if not announcement.read %}
-          <p class="text-muted">Unread</p>
-          {% endif %}
-        </div>
-        <div class="card-footer text-muted border-info">
-          {{ announcement.created_at }}
-        </div>
-      </div>
-      {% endfor %}
     </div>
+
+    <!-- Supervisor Announcements -->
+    {% if lecturer_announcements %}
+    <p class="section-label">👨‍🏫 From Supervisor</p>
+
+    {% for announcement in lecturer_announcements %}
+    <div class="notif-card {% if not announcement.read %}notif-card--unread{% endif %}">
+      <div class="notif-top">
+        <div class="notif-avatar avatar-blue">
+          {{ announcement.sender.name|first|upper }}
+        </div>
+        <div class="notif-meta">
+          <span class="notif-sender">{{ announcement.sender.name }}</span>
+          <span class="notif-date">📅 {{ announcement.created_at|date:"d M Y, H:i" }}</span>
+        </div>
+        {% if not announcement.read %}
+        <span class="notif-badge">🔵 Unread</span>
+        {% else %}
+        <span class="notif-badge notif-badge--read">✔ Read</span>
+        {% endif %}
+      </div>
+
+      <div class="notif-body">
+        <p class="notif-subject">📌 {{ announcement.subject }}</p>
+        <p class="notif-message">{{ announcement.message }}</p>
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- Coordinator Announcements -->
+    {% if coordinator_announcements %}
+    <p class="section-label {% if lecturer_announcements %}mt-4{% endif %}">🏫 From Projects Coordinator</p>
+
+    {% for announcement in coordinator_announcements %}
+    <div class="notif-card {% if not announcement.read %}notif-card--unread{% endif %}">
+      <div class="notif-top">
+        <div class="notif-avatar avatar-green">C</div>
+        <div class="notif-meta">
+          <span class="notif-sender">Projects Coordinator</span>
+          <span class="notif-date">📅 {{ announcement.created_at|date:"d M Y, H:i" }}</span>
+        </div>
+        {% if not announcement.read %}
+        <span class="notif-badge">🔵 Unread</span>
+        {% else %}
+        <span class="notif-badge notif-badge--read">✔ Read</span>
+        {% endif %}
+      </div>
+
+      <div class="notif-body">
+        <p class="notif-subject">📌 {{ announcement.subject }}</p>
+        <p class="notif-message">{{ announcement.message }}</p>
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- Empty State -->
+    {% if not lecturer_announcements and not coordinator_announcements %}
+    <div class="empty-state">
+      <p style="font-size:48px; margin:0;">📭</p>
+      <h5 class="fw-semibold text-dark">No announcements yet</h5>
+      <p class="text-muted">Your supervisor and coordinator haven't posted anything yet.</p>
+    </div>
+    {% endif %}
+
   </div>
 </div>
 
-<link rel="stylesheet" href="{% static 'css/notifications.css' %}" />
+<style>
+  .content {
+    margin-left: 240px;
+    margin-top: 60px;
+    min-height: calc(100vh - 60px);
+    background: #f4f6f9;
+    padding: 28px 32px;
+    box-sizing: border-box;
+  }
+
+  .dashboard-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .page-header { margin-bottom: 24px; }
+  .page-title  { font-size: 22px; font-weight: 600; color: #1e293b; margin: 0 0 4px; }
+  .page-sub    { font-size: 13px; color: #64748b; margin: 0; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #94a3b8;
+    margin-bottom: 12px;
+  }
+
+  /* Card */
+  .notif-card {
+    background: #fff;
+    border: 1px solid #e8edf3;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    transition: box-shadow 0.15s;
+  }
+  .notif-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  }
+  .notif-card--unread {
+    border-left: 4px solid #2563eb;
+    background: #fafcff;
+  }
+
+  /* Top row */
+  .notif-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .notif-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .avatar-blue  { background: #2563eb; }
+  .avatar-green { background: #16a34a; }
+
+  .notif-meta {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .notif-sender { font-size: 14px; font-weight: 600; color: #1e293b; }
+  .notif-date   { font-size: 12px; color: #94a3b8; }
+
+  .notif-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 99px;
+    background: #fef3c7;
+    color: #b45309;
+    white-space: nowrap;
+  }
+  .notif-badge--read {
+    background: #f1f5f9;
+    color: #94a3b8;
+  }
+
+  /* Body */
+  .notif-body {
+    padding-left: 50px;
+  }
+
+  .notif-subject {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 6px;
+  }
+
+  .notif-message {
+    font-size: 13px;
+    color: #374151;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* Empty state */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 60px 24px;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e8edf3;
+    text-align: center;
+  }
+
+  @media (max-width: 600px) {
+    .content { margin-left: 0; padding: 16px; }
+    .notif-body { padding-left: 0; }
+  }
+</style>
+
 {% endblock %}
