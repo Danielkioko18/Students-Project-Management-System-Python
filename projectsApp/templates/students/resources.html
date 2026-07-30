@@ -1,35 +1,199 @@
-<!-- Student Dashboard Template -->
-<title>Profile</title>
-{% extends 'base.html' %} {% load static %} {% block content %}
+<title>Resources</title>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
 
-<!-- Content Area -->
 {% include 'column1.html' %}
+
 <div class="content">
-  <div class="container-fluid">
-    <div class="row">
-      <h1 class="text-center" style="width: 100%; border-bottom: lightblue">
-        Resources
-      </h1>
-      <br />
-      <!-- Display resources -->
-      {% for resource in resources %}
-      <div class="card mb-3 border-info">
-        <div class="card-header border-info">
-          <b>Subject:</b> {{ resource.subject }}
-        </div>
-        <div class="card-body">
-          <h5 class="card-title"><b>Message:</b></h5>
-          <p class="card-text text-info">{{ resource.message }}</p>
-          <a href="{{ resource.file.url }}" class="btn btn-info">View File</a>
-        </div>
-        <div class="card-footer text-muted border-info text-danger">
-          {{ resource.uploaded_at }}
+  <div class="dashboard-wrapper">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">📚 Resources</h2>
+        <p class="page-sub">Files and materials shared by your supervisor and coordinator.</p>
+      </div>
+    </div>
+
+    <!-- Resources List -->
+    {% if resources %}
+    <p class="section-label">📁 Shared Files</p>
+
+    {% for resource in resources %}
+    <div class="resource-card">
+      <div class="resource-top">
+        <div class="resource-icon">📄</div>
+        <div class="resource-meta">
+          <span class="resource-subject">{{ resource.subject }}</span>
+          <span class="resource-date">📅 {{ resource.uploaded_at|date:"d M Y, H:i" }}</span>
         </div>
       </div>
-      {% endfor %}
+
+      {% if resource.message %}
+      <p class="resource-message">{{ resource.message }}</p>
+      {% endif %}
+
+      <div class="resource-footer">
+        <a href="{{ resource.file.url }}" target="_blank" class="view-btn">
+          👁️ View File
+        </a>
+        <a href="{{ resource.file.url }}" download class="download-btn">
+          ⬇️ Download
+        </a>
+      </div>
     </div>
+    {% endfor %}
+
+    {% else %}
+    <!-- Empty State -->
+    <div class="empty-state">
+      <p style="font-size:48px; margin:0;">📭</p>
+      <h5 class="fw-semibold text-dark">No resources yet</h5>
+      <p class="text-muted">Your supervisor or coordinator hasn't shared any files yet.</p>
+    </div>
+    {% endif %}
+
   </div>
 </div>
 
-<link rel="stylesheet" href="{% static 'css/notifications.css' %}" />
+<style>
+  .content {
+    margin-left: 240px;
+    margin-top: 60px;
+    min-height: calc(100vh - 60px);
+    background: #f4f6f9;
+    padding: 28px 32px;
+    box-sizing: border-box;
+  }
+
+  .dashboard-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .page-header { margin-bottom: 24px; }
+  .page-title  { font-size: 22px; font-weight: 600; color: #1e293b; margin: 0 0 4px; }
+  .page-sub    { font-size: 13px; color: #64748b; margin: 0; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #94a3b8;
+    margin-bottom: 12px;
+  }
+
+  /* Resource Card */
+  .resource-card {
+    background: #fff;
+    border: 1px solid #e8edf3;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    transition: box-shadow 0.15s;
+  }
+  .resource-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  }
+
+  .resource-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .resource-icon {
+    width: 42px;
+    height: 42px;
+    background: #eff6ff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .resource-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+  }
+  .resource-subject {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e293b;
+  }
+  .resource-date {
+    font-size: 12px;
+    color: #94a3b8;
+  }
+
+  .resource-message {
+    font-size: 13px;
+    color: #374151;
+    line-height: 1.7;
+    margin: 0 0 14px;
+    padding-left: 54px;
+  }
+
+  .resource-footer {
+    display: flex;
+    gap: 8px;
+    padding-left: 54px;
+  }
+
+  .view-btn, .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 7px;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .view-btn {
+    background: #eff6ff;
+    color: #1d4ed8;
+  }
+  .view-btn:hover {
+    background: #dbeafe;
+    color: #1d4ed8;
+    text-decoration: none;
+  }
+  .download-btn {
+    background: #f0fdf4;
+    color: #15803d;
+  }
+  .download-btn:hover {
+    background: #dcfce7;
+    color: #15803d;
+    text-decoration: none;
+  }
+
+  /* Empty state */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 60px 24px;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e8edf3;
+    text-align: center;
+  }
+
+  @media (max-width: 600px) {
+    .content { margin-left: 0; padding: 16px; }
+    .resource-message, .resource-footer { padding-left: 0; }
+  }
+</style>
+
 {% endblock %}
