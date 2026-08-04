@@ -24,32 +24,24 @@
     <!-- Project Info Cards -->
     <div class="stats-grid">
 
-      <!-- Project Title -->
+      <!-- Project Title + Status combined -->
       <div class="stat-card stat-card--wide">
         <div class="stat-icon icon-blue">📄</div>
         <div class="stat-body">
           <span class="stat-label">Project Title</span>
           {% if my_project %}
             {% for project in my_project %}
+            <span class="project-status-tag
+              {% if project.status == 'approved' %}status-approved
+              {% elif project.status == 'pending' %}status-pending
+              {% elif project.status == 'rejected' %}status-rejected
+              {% else %}status-pending{% endif %}">
+              Status: {{ project.status|title }}
+            </span>
             <span class="stat-value" style="font-size:18px;">{{ project.title }}</span>
             {% endfor %}
           {% else %}
             <span class="stat-value text-muted" style="font-size:15px;">No project uploaded yet</span>
-          {% endif %}
-        </div>
-      </div>
-
-      <!-- Status -->
-      <div class="stat-card">
-        <div class="stat-icon icon-purple">📊</div>
-        <div class="stat-body">
-          <span class="stat-label">Project Status</span>
-          {% if my_project %}
-            {% for project in my_project %}
-            <span class="stat-value" style="font-size:18px;">{{ project.status|title }}</span>
-            {% endfor %}
-          {% else %}
-            <span class="stat-value text-muted" style="font-size:15px;">—</span>
           {% endif %}
         </div>
       </div>
@@ -243,6 +235,21 @@
     gap: 2px;
     margin-bottom: 12px;
   }
+
+  .project-status-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 99px;
+  margin-bottom: 8px;
+  width: fit-content;
+  }
+  .status-approved { background: #f0fdf4; color: #15803d; }
+  .status-pending  { background: #fef3c7; color: #b45309; }
+  .status-rejected { background: #fff1f2; color: #be123c; }
+
+
   .stat-value {
     font-size: 30px;
     font-weight: 700;
