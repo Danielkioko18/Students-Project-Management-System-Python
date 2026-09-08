@@ -4,121 +4,294 @@
 
 {% block content %}
 {% include "column1_Lec.html" %}
+
 <div class="content">
-    <div class="container-fluid">
-        <div class="row">
-            {% with messages as messages %}
-                {% if messages %}
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="message {{ message.tags }}">
-                                {{ message }}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            {% endwith %}
-            <div class="card mb-5">
-                <div class="card-header text-center">
-                    <h4 class="text-success"><b>Project Details</b></h4>
-                </div>
+  <div class="dashboard-wrapper">
 
-                <div class="card mb-4 mt-3">
-                    <div class="card-body">
-                        <u class="text-center text-info"><h4 ><strong>Project Title</strong></h4></u>
-                        <h2 class="text-center">{{project.title}}</h2>
-                    </div>
-                </div>
-
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <u class="text-center text-info"><h4> <strong >Project Description</strong></h4></u>
-                        <p>{{project.description}}</p>
-                    </div>                    
-                </div>
-
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <u class="text-center text-info"><h4 ><strong >Project Objectives</strong></h4></u>
-                        <p>{{project.objectives|linebreaks}}</p>
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#approveModal">
-                          Title Revision
-                        </button>
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#acceptTitleModal">
-                          Accept Title
-                        </button>
-                    </div>
-
-                    <!-- Title revision form to add comment on what to revise -->
-                    <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel" aria-hidden="true">
-                        <!-- Your modal content here -->
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title text-center" id="approveModalLabel">Reason For Revision</h5>
-                              <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div class="modal-body">
-                              <form action="{% url "student_project" project.id %}" method="post" id="approve_form">
-                                {% csrf_token %}
-                                <div class="form-group">
-                                  <input type="hidden" id="project_id" value="{{ project.id }}">
-                                </div>
-                                <div class="form-group">
-                                  <label class="text-center"><b>{{project.title}}</b></label>
-                                </div>
-                                <div class="form-group">
-                                  <label for="comment"><b>Add Reason:</b></label>
-                                  <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
-                                </div>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary" id="submit_approval">Send</button>
-                            
-                              </form>
-                            </div>
-                            <div class="modal-footer">
-                              </div>
-                            
-                          </div>
-                        </div>
-                    </div>
-                    <!-- End Approval form -->
-
-                    <!-- Acceptance modal -->
-
-                    <div class="modal fade" id="acceptTitleModal" tabindex="-1" role="dialog" aria-labelledby="acceptTitleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title text-center" id="acceptTitleModalLabel">Confirm Title Acceptance</h5>
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <p>Are you sure you want to accept the project title: <strong>{{ project.title }}</strong>?</p>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <a href="{% url 'accept_title' project.id %}" class="btn btn-primary">Accept</a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- End Of acceptance model-->
-                </div>
-            </div>            
-        </div> 
+    <!-- Django Messages -->
+    {% with messages as messages %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert-box alert-{{ message.tags }}-box mb-3">
+      {{ message }}
     </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">📋 Project Details</h2>
+        <p class="page-sub">Review the student's submitted project title and take action.</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn-approve" data-bs-toggle="modal" data-bs-target="#acceptTitleModal">
+          ✅ Accept Title
+        </button>
+        <button class="btn-revise" data-bs-toggle="modal" data-bs-target="#approveModal">
+          ✏️ Request Revision
+        </button>
+      </div>
+    </div>
+
+    <!-- Project Title Card -->
+    <div class="detail-card">
+      <div class="detail-card-label">📄 Project Title</div>
+      <h2 class="detail-title">{{ project.title }}</h2>
+    </div>
+
+    <!-- Project Description Card -->
+    <div class="detail-card">
+      <div class="detail-card-label">📝 Project Description</div>
+      <p class="detail-text">{{ project.description }}</p>
+    </div>
+
+    <!-- Project Objectives Card -->
+    <div class="detail-card">
+      <div class="detail-card-label">🎯 Project Objectives</div>
+      <p class="detail-text">{{ project.objectives|linebreaks }}</p>
+    </div>
+
+  </div>
 </div>
 
-<!-- Include Bootstrap JavaScript library -->
+<!-- Revision Modal -->
+<div class="modal fade" id="approveModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content styled-modal">
+      <div class="modal-header styled-modal-header">
+        <h5 class="modal-title">✏️ Request Revision</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="padding:20px 24px;">
+        <p style="font-size:13px; color:#64748b; margin-bottom:4px;">Project title:</p>
+        <p style="font-size:14px; font-weight:600; color:#1e293b; margin-bottom:16px;">{{ project.title }}</p>
+        <form action="{% url 'student_project' project.id %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" value="{{ project.id }}">
+          <label class="field-label">Reason for revision</label>
+          <textarea
+            name="comment"
+            rows="4"
+            placeholder="Explain clearly what the student needs to change..."
+            class="styled-textarea"
+          ></textarea>
+          <div class="modal-footer-btns">
+            <button type="button" class="modal-btn modal-btn--cancel" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="modal-btn modal-btn--primary">Send Revision</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Accept Title Modal -->
+<div class="modal fade" id="acceptTitleModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content styled-modal">
+      <div class="modal-header styled-modal-header">
+        <h5 class="modal-title">✅ Confirm Acceptance</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="padding:20px 24px;">
+        <div class="confirm-box">
+          <div class="confirm-icon">✅</div>
+          <div>
+            <p style="font-size:14px; font-weight:600; color:#1e293b; margin:0 0 4px;">Accept this project title?</p>
+            <p style="font-size:13px; color:#64748b; margin:0;">
+              <strong>{{ project.title }}</strong> — the student will be notified and can begin uploads.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top:1px solid #f1f5f9; padding:14px 24px; display:flex; justify-content:flex-end; gap:8px;">
+        <button type="button" class="modal-btn modal-btn--cancel" data-bs-dismiss="modal">Cancel</button>
+        <a href="{% url 'accept_title' project.id %}" class="modal-btn modal-btn--success">Accept Title</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="js/approvemodal.js"></script>
-<link rel="stylesheet" href="{% static 'css/viewproject.css' %}">
+
+<style>
+  .content {
+    margin-left: 240px;
+    margin-top: 60px;
+    min-height: calc(100vh - 60px);
+    background: #f4f6f9;
+    padding: 28px 32px;
+    box-sizing: border-box;
+  }
+  .dashboard-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  /* Page Header */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .page-title { font-size: 22px; font-weight: 600; color: #1e293b; margin: 0 0 4px; }
+  .page-sub   { font-size: 13px; color: #64748b; margin: 0; }
+
+  .header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .btn-approve {
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-approve:hover { background: #dcfce7; }
+
+  .btn-revise {
+    background: #fffbeb;
+    color: #b45309;
+    border: 1px solid #fde68a;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-revise:hover { background: #fef3c7; }
+
+  /* Detail Cards */
+  .detail-card {
+    background: #fff;
+    border: 1px solid #e8edf3;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    transition: box-shadow 0.15s;
+  }
+  .detail-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+
+  .detail-card-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #94a3b8;
+    margin-bottom: 10px;
+  }
+
+  .detail-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .detail-text {
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  /* Alert boxes */
+  .alert-box { padding: 12px 16px; border-radius: 8px; font-size: 13px; }
+  .alert-success-box { background: #f0fdf4; color: #15803d; }
+  .alert-error-box   { background: #fff1f2; color: #be123c; }
+  .alert-warning-box { background: #fffbeb; color: #b45309; }
+  .alert-info-box    { background: #eff6ff; color: #1e40af; }
+
+  /* Modals */
+  .styled-modal {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    overflow: hidden;
+  }
+  .styled-modal-header {
+    border-bottom: 1px solid #f1f5f9;
+    padding: 16px 24px;
+    background: #f8fafc;
+  }
+  .styled-modal-header .modal-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  .field-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #64748b;
+    margin-bottom: 6px;
+  }
+  .styled-textarea {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #374151;
+    resize: vertical;
+    outline: none;
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+  .styled-textarea:focus { border-color: #2563eb; }
+
+  .confirm-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .confirm-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  .modal-footer-btns {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .modal-btn {
+    display: inline-flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 7px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .modal-btn--cancel  { background: #f1f5f9; color: #374151; }
+  .modal-btn--cancel:hover { background: #e2e8f0; }
+  .modal-btn--primary { background: #2563eb; color: #fff; }
+  .modal-btn--primary:hover { background: #1d4ed8; }
+  .modal-btn--success { background: #16a34a; color: #fff; }
+  .modal-btn--success:hover { background: #15803d; color: #fff; text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .content { margin-left: 0; padding: 16px; }
+    .page-header { flex-direction: column; align-items: flex-start; }
+  }
+</style>
 
 {% endblock %}
