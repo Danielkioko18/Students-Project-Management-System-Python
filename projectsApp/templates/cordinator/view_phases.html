@@ -1,4 +1,4 @@
-<title>phases</title>
+<title>Phases</title>
 {% extends "base_cord.html" %}
 {% load static %}
 
@@ -6,61 +6,235 @@
 {% include "column1_cord.html" %}
 
 <div class="content">
-    <div class="container-fluid">
-        <div class="row">
-            {% if success_message %}
-              <div class="alert alert-info" role="alert">
-                  {{ success_message }}
-              </div>
-            {% endif %}
-            <div class="card border-info">
-                <div class="card-header text-center">
-                    <h4><b>Phases</b></h4>
-                </div>
-                <div class="card-body">
-                    <table class="table table-bordered table-hover  table-striped border-info">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Description</th>
-                                <th scope="col">Deadline</th> 
-                                <th scope="col">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for phase in phases %}
-                              <tr>
-                                <th scope="row">{{forloop.counter}}</th>
-                                <td><b>{{phase.name|title}}</b></td>
-                                <td>{{phase.description}}</td>
-                                <td class="text-info"><b>{{phase.deadline_date}}</b></td>
-                                <td>
-                                    <div class="row">
-                                        <div class="col-4">
-                                            <form action="{% url 'view_phases' %}" method="POST">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="phase_id" value="{{ phase.id }}">
-                                                <button type="submit"  class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{phase.name}}?')"><i class="fa fa-trash" aria-hidden="true"></i></button>
-                                            </form>
-                                        </div>
-                                        <div class="col-4">
-                                            <a href="{% url 'edit_phase' phase.id %}" class="btn btn-info"><i class="fa fa-edit" aria-hidden="true"></i></a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>                
-        </div>
-              
-    </div>
-</div>
-<!-- Include Bootstrap JavaScript library -->
-<link rel="stylesheet" href="{% static 'css/mystudents.css' %}">
+  <div class="dashboard-wrapper">
 
+    <!-- Success Message -->
+    {% if success_message %}
+    <div class="alert-box alert-success-box mb-3">
+      ✅ {{ success_message }}
+    </div>
+    {% endif %}
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">📋 Project Phases</h2>
+        <p class="page-sub">Manage and organise all project submission phases.</p>
+      </div>
+      <a href="{% url 'create_phase' %}" class="btn-primary-action">
+        ➕ Add New Phase
+      </a>
+    </div>
+
+    <!-- Phases Table -->
+    <div class="panel">
+      <div class="panel-header">
+        <h3 class="panel-title">All Phases</h3>
+        <span class="phase-count">{{ phases|length }} phase{{ phases|length|pluralize }}</span>
+      </div>
+
+      {% if phases %}
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Phase Name</th>
+            <th>Description</th>
+            <th>Deadline</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for phase in phases %}
+          <tr>
+            <td class="row-num">{{ forloop.counter }}</td>
+            <td>
+              <span class="phase-name">{{ phase.name|title }}</span>
+            </td>
+            <td>
+              <span class="phase-desc">{{ phase.description }}</span>
+            </td>
+            <td>
+              <span class="deadline-badge">⏰ {{ phase.deadline_date }}</span>
+            </td>
+            <td>
+              <div class="action-btns">
+                <a href="{% url 'edit_phase' phase.id %}" class="action-btn action-btn--edit">
+                  ✏️ Edit
+                </a>
+                <form action="{% url 'view_phases' %}" method="POST" style="margin:0;">
+                  {% csrf_token %}
+                  <input type="hidden" name="phase_id" value="{{ phase.id }}">
+                  <button
+                    type="submit"
+                    class="action-btn action-btn--delete"
+                    onclick="return confirm('Are you sure you want to delete {{ phase.name }}?')"
+                  >
+                    🗑️ Delete
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% else %}
+      <div class="empty-state">
+        <p style="font-size:40px; margin:0;">📭</p>
+        <h5>No phases yet</h5>
+        <p>Click <strong>Add New Phase</strong> to create the first phase.</p>
+      </div>
+      {% endif %}
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .content {
+    margin-left: 240px;
+    margin-top: 60px;
+    min-height: calc(100vh - 60px);
+    background: #f4f6f9;
+    padding: 28px 32px;
+    box-sizing: border-box;
+  }
+  .dashboard-wrapper { max-width: 1000px; margin: 0 auto; }
+
+  /* Page Header */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .page-title { font-size: 22px; font-weight: 600; color: #1e293b; margin: 0 0 4px; }
+  .page-sub   { font-size: 13px; color: #64748b; margin: 0; }
+
+  .btn-primary-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #2563eb;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .btn-primary-action:hover { background: #1d4ed8; color: #fff; text-decoration: none; }
+
+  /* Panel */
+  .panel {
+    background: #fff;
+    border: 1px solid #e8edf3;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .panel-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid #f1f5f9;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .panel-title { font-size: 14px; font-weight: 600; color: #1e293b; margin: 0; }
+  .phase-count {
+    font-size: 11px;
+    font-weight: 600;
+    background: #eff6ff;
+    color: #2563eb;
+    padding: 3px 10px;
+    border-radius: 99px;
+  }
+
+  /* Table */
+  .doc-table { width: 100%; border-collapse: collapse; }
+  .doc-table thead tr { background: #f8fafc; }
+  .doc-table th {
+    padding: 10px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #94a3b8;
+    text-align: left;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .doc-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f8fafc;
+    vertical-align: middle;
+    font-size: 13px;
+  }
+  .doc-table tbody tr:last-child td { border-bottom: none; }
+  .doc-table tbody tr:hover { background: #fafbfc; }
+
+  .row-num { color: #94a3b8; font-size: 13px; }
+  .phase-name { font-weight: 600; color: #1e293b; }
+  .phase-desc { color: #64748b; font-size: 13px; line-height: 1.5; }
+
+  .deadline-badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #b45309;
+    background: #fffbeb;
+    padding: 3px 10px;
+    border-radius: 99px;
+  }
+
+  /* Action buttons */
+  .action-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .action-btn--edit   { background: #eff6ff; color: #1d4ed8; }
+  .action-btn--edit:hover { background: #dbeafe; text-decoration: none; color: #1d4ed8; }
+  .action-btn--delete { background: #fff1f2; color: #be123c; }
+  .action-btn--delete:hover { background: #ffe4e6; }
+
+  /* Alert boxes */
+  .alert-box { padding: 12px 16px; border-radius: 8px; font-size: 13px; }
+  .alert-success-box { background: #f0fdf4; color: #15803d; }
+
+  /* Empty state */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 50px 24px;
+    text-align: center;
+    color: #64748b;
+  }
+  .empty-state h5 { font-size: 15px; font-weight: 600; color: #1e293b; margin: 0; }
+  .empty-state p  { font-size: 13px; margin: 0; }
+
+  @media (max-width: 600px) {
+    .content { margin-left: 0; padding: 16px; }
+    .page-header { flex-direction: column; align-items: flex-start; }
+    .doc-table th:nth-child(3),
+    .doc-table td:nth-child(3) { display: none; }
+  }
+</style>
 
 {% endblock %}

@@ -759,7 +759,7 @@ def milestones(request):
         #print(phase_proposals)
     context = {'phase_proposals': phase_proposals}
     
-    return render(request, 'supervisors/milestones.html', context)
+    return render(request, 'supervisors/student_uploads.html', context)
 
 
 # View uploads
@@ -1260,7 +1260,7 @@ def view_milestones_cord(request):
     phases = Phases.objects.all().order_by('order')  # Get all phases in order
 
     context = {'phases': phases}
-    return render(request, 'cordinator/milestones_cord.html', context)
+    return render(request, 'cordinator/progress.html', context)
 
 
 # Make announcemnts view
