@@ -106,29 +106,46 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content styled-modal">
           <div class="modal-header styled-modal-header">
-            <h5 class="modal-title">Confirm Approval</h5>
+            <h5 class="modal-title">✅ Approve Document</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body" style="padding: 20px 24px;">
-            <div class="confirm-box">
-              <div class="confirm-icon">
-                <svg width="20" height="20" fill="none" stroke="#16a34a" stroke-width="2.5" viewBox="0 0 24 24">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
-              </div>
+          <div class="modal-body" style="padding:20px 24px;">
+            <div class="confirm-box" style="margin-bottom:20px;">
+              <div class="confirm-icon">✅</div>
               <div>
-                <p style="font-size:14px; font-weight:600; color:#1e293b; margin:0 0 4px;">Approve Document #{{ document.id }}?</p>
-                <p style="font-size:13px; color:#64748b; margin:0;">This will mark the document as approved and move student to next the phase.</p>
+                <p style="font-size:14px; font-weight:600; color:#1e293b; margin:0 0 4px;">
+                  Approve Document #{{ document.id }}?
+                </p>
+                <p style="font-size:13px; color:#64748b; margin:0;">
+                  The student will be notified and marks will be recorded.
+                </p>
               </div>
             </div>
-          </div>
-          <div class="modal-footer" style="border-top:1px solid #f1f5f9; padding:14px 24px;">
-            <button type="button" class="modal-btn modal-btn--cancel" data-bs-dismiss="modal">Cancel</button>
-            <form action="{% url 'approve_document' %}" method="post" style="margin:0;">
+            <form action="{% url 'approve_document' %}" method="post">
               {% csrf_token %}
-              <input type="hidden" name="approve" value="true">
               <input type="hidden" name="document_id" value="{{ document.id }}">
-              <button type="submit" class="modal-btn modal-btn--success">Approve</button>
+              <input type="hidden" name="approve" value="true">
+
+              <div class="field-group" style="margin-bottom:6px;">
+                <label class="field-label">Marks Awarded <span style="color:#94a3b8; font-weight:400;">(out of 20)</span></label>
+                <input
+                  type="number"
+                  name="marks"
+                  min="0"
+                  max="20"
+                  required
+                  placeholder="e.g. 15"
+                  class="styled-input"
+                >
+                <small style="color:#94a3b8; font-size:11px; margin-top:4px; display:block;">
+                  Enter a value between 0 and 20.
+                </small>
+              </div>
+
+              <div class="modal-footer-btns">
+                <button type="button" class="modal-btn modal-btn--cancel" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="modal-btn modal-btn--success">Approve & Save Marks</button>
+              </div>
             </form>
           </div>
         </div>
@@ -302,6 +319,18 @@
     cursor: pointer;
     transition: background 0.15s;
   }
+  .styled-input {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 9px 14px;
+    font-size: 13px;
+    color: #374151;
+    outline: none;
+    box-sizing: border-box;
+  }
+  .styled-input:focus { border-color: #2563eb; }
+
   .action-btn--view    { background: #eff6ff; color: #1d4ed8; }
   .action-btn--view:hover { background: #dbeafe; }
   .action-btn--approve { background: #f0fdf4; color: #15803d; }

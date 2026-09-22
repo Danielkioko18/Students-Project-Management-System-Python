@@ -214,6 +214,23 @@ def student_dashboard(request):
     # =============================== Phases ====================================================================
     phases = Phases.objects.all()
 
+
+    # Calculate total marks scored and total marks possible
+    total_marks_scored = 0
+    total_marks_possible = 0
+
+    for phase in phases:
+        approved_doc = Documents.objects.filter(
+            phase=phase,
+            student=student,
+            status='approved'
+        ).exclude(marks=None).first()
+
+        total_phases = phases.count()
+        if approved_doc:
+            total_marks_scored += approved_doc.marks
+            total_marks_possible = 20 * total_phases  # each phase is out of 20
+
     # check if project is accepted
     project_accepted = True
     if my_project.exists():
@@ -229,7 +246,10 @@ def student_dashboard(request):
         'total_announcements':total_announcements,
         'project_accepted':project_accepted,
         'total_unread':total_unread,
-        'phases':phases
+        'phases':phases,
+        'total_marks_scored':total_marks_scored,
+        'total_marks_possible':total_marks_possible
+
     }
     return render(request, 'students/student_dashboard.html', context)
 
@@ -832,9 +852,12 @@ def approve_document(request):
     if request.method == 'POST':
         # Get the document ID from the form
         document_id = request.POST.get('document_id')
+        marks = request.POST.get('marks')
         # Update status to "approved" for the specific document
         document = get_object_or_404(Documents, pk=document_id)
         document.status = "approved"
+        if marks:
+            document.marks = int(marks)
         document.save()
 
         proposal = document.proposal

@@ -124,6 +124,7 @@ class Documents(models.Model):
         ('approved', 'Approved'),
         ('revision_requested', 'Revision Required')
     ], default='pending')
+    marks = models.PositiveIntegerField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.file_name:  # If file name is not already set

@@ -12,6 +12,9 @@
             <div class="text-center mt-3 ml-3">
                 <button id="print-button" onclick="printTable()" class="btn btn-info">Print Table</button>
             </div>
+            <div class="text-center mt-3 ml-3">
+                <button id="add-supervisor-button" onclick="window.location.href='{% url "add_supervisor" %}'" class="btn btn-success">Add Supervisor</button>
+            </div>
             {% if success_message %}
               <div class="alert alert-info" role="alert">
                   {{ success_message }}

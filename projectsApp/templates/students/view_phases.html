@@ -57,6 +57,7 @@
               <th>#</th>
               <th>Document Name</th>
               <th>Status</th>
+              <th>Marks</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -79,16 +80,19 @@
                 {% endif %}
               </td>
               <td>
+                {% if document.status == 'approved' and document.marks is not None %}
+                  <span class="marks-badge">{{ document.marks }} / 20</span>
+                {% else %}
+                  <span style="color:#94a3b8; font-size:12px;">—</span>
+                {% endif %}
+              </td>
+              <td>
                 <button class="view-btn" data-bs-toggle="modal" data-bs-target="#studentPdfModal{{ document.id }}">
                   👁️ View
                 </button>
               </td>
             </tr>
             {% endif %}
-            {% empty %}
-            <tr>
-              <td colspan="4" class="empty-row">No documents uploaded for this phase yet.</td>
-            </tr>
             {% endfor %}
           </tbody>
         </table>
@@ -261,6 +265,17 @@
   .badge-approved { background: #f0fdf4; color: #15803d; }
   .badge-revision  { background: #fffbeb; color: #b45309; }
   .badge-pending   { background: #f1f5f9; color: #64748b; }
+  
+  /* Marks badge */
+  .marks-badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    background: #eff6ff;
+    color: #1d4ed8;
+    padding: 3px 10px;
+    border-radius: 99px;
+  }
 
   /* View button */
   .view-btn { background: #eff6ff; color: #1d4ed8; border: none; padding: 5px 12px; border-radius: 7px; font-size: 12px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
