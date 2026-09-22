@@ -207,6 +207,12 @@ def student_dashboard(request):
     unread_feedbacks = CoordinatorFeedbacks.objects.filter(project__student=student, read=False).count()
     total_unread = unread_notifications + unread_feedbacks
 
+    unread_lecturer_announcements = Announcements.objects.filter(sender=lecturer, read=False).count() if lecturer else 0
+    unread_coordinator_announcements = CoordinatorAnnouncements.objects.filter(read=False).count()
+    unread_announcements_count = unread_lecturer_announcements + unread_coordinator_announcements
+
+    unread_resources_count = Resources.objects.filter(read=False).count()
+
     # =============================== Totals ====================================================================
     total_notifications = lec_notifications + cord_notifications    
     total_announcements = lec_announcements + cord_announcements
@@ -246,6 +252,9 @@ def student_dashboard(request):
         'total_announcements':total_announcements,
         'project_accepted':project_accepted,
         'total_unread':total_unread,
+        'unread_notifications_count': unread_notifications + unread_feedbacks,
+        'unread_announcements_count': unread_announcements_count,
+        'unread_resources_count': unread_resources_count,
         'phases':phases,
         'total_marks_scored':total_marks_scored,
         'total_marks_possible':total_marks_possible
@@ -541,9 +550,13 @@ def announcements(request):
             announcement.read = True
             announcement.save()
 
+    unread_lecturer_announcements = Announcements.objects.filter(sender=lecturer, read=False).count() if lecturer else 0
+    unread_coordinator_announcements = CoordinatorAnnouncements.objects.filter(read=False).count()
+
     context = {
         'lecturer_announcements': lecturer_announcements,
         'coordinator_announcements': coordinator_announcements,
+        'unread_announcements_count': unread_lecturer_announcements + unread_coordinator_announcements,
     }
     return render(request, 'students/announcements.html', context)
 
@@ -567,9 +580,13 @@ def notifications(request):
         feedback.read = True
         feedback.save()
 
+    unread_notifications_count = Notifications.objects.filter(recipient=student, read=False).count()
+    unread_feedbacks_count = CoordinatorFeedbacks.objects.filter(project__student=student, read=False).count()
+
     context = {
         'notifications':notifications,
-        'coordinator_feedbacks':coordinator_feedbacks
+        'coordinator_feedbacks':coordinator_feedbacks,
+        'unread_notifications_count': unread_notifications_count + unread_feedbacks_count,
         }
 
     return render(request, 'students/notifications.html', context)
@@ -580,7 +597,16 @@ def resources(request):
     # Fetch all resources, arranged by latest upload first
     resources = Resources.objects.all().order_by('-uploaded_at')
 
-    context = {'resources': resources}
+    unread_resources_count = Resources.objects.filter(read=False).count()
+
+    for resource in resources:
+        resource.read = True
+        resource.save()
+
+    context = {
+        'resources': resources,
+        'unread_resources_count': unread_resources_count,
+    }
 
     return render(request, 'students/resources.html', context)
 
