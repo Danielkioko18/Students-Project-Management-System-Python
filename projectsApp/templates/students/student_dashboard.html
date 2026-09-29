@@ -32,11 +32,12 @@
           {% if my_project %}
             {% for project in my_project %}
             <span class="project-status-tag
-              {% if project.status == 'approved' %}status-approved
+              {% if project.is_completed %}status-approved
+              {% elif project.status == 'approved' %}status-approved
               {% elif project.status == 'pending' %}status-pending
               {% elif project.status == 'rejected' %}status-rejected
               {% else %}status-pending{% endif %}">
-              Status: {{ project.status|title }}
+              Status: {% if project.is_completed %}Completed{% else %}{{ project.status|title }}{% endif %}
             </span>
             <span class="stat-value" style="font-size:18px;">{{ project.title }}</span>
             {% endfor %}

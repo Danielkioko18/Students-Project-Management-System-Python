@@ -14,6 +14,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
 from django.urls import reverse_lazy
+from django.db.models import Exists, OuterRef
 from .mail_service import send_email
 from django.db import IntegrityError
 import random
@@ -186,7 +187,11 @@ def SignUp(request):
 @student_required
 def student_dashboard(request):
     student = request.user
-    my_project = Projects.objects.filter(student=student)
+    my_project = Projects.objects.filter(student=student).annotate(
+        is_completed=Exists(
+            Proposal.objects.filter(project_id=OuterRef('pk'), completed=True)
+        )
+    )
     project = my_project.first()  # Get the first project if it exists
 
     if project:
