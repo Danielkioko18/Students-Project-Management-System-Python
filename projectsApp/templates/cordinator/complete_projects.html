@@ -28,6 +28,7 @@
                 <th scope="col">Name</th>
                 <th scope="col">Title</th>
                 <th scope="col">Supervisor</th>
+                <th scope="col">Marks(%)</th>
               </tr>
             </thead>
             <tbody>
@@ -39,6 +40,7 @@
                     <td>{{project.student.name|upper}}</td>
                     <td>{{project.title|upper}}</td>
                     <td>{{project.lecturer.name|title}}</td>
+                    <td>{{project.marks_percentage|floatformat:-2}}%</td>
                   </tr>
                 {% endfor %}
               {% else %}

@@ -14,7 +14,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.db.models import Exists, OuterRef
+from django.db.models import Exists, OuterRef, Q, Sum
 from .mail_service import send_email
 from django.db import IntegrityError
 import random
@@ -1299,8 +1299,18 @@ def rejected_titles(request):
     return render(request, 'cordinator/rejected_titles.html', context)
 
 # Completed projects
+@coordinator_required
 def completed_projects(request):
-    projects = Proposal.objects.filter(completed=True).order_by('id')
+    projects = Proposal.objects.filter(completed=True).annotate(
+        total_marks=Sum('documents__marks', filter=Q(documents__status='approved'))
+    ).order_by('id')
+    total_marks_possible = Phases.objects.count() * 20
+
+    for project in projects:
+        marks_scored = project.total_marks or 0
+        project.marks_percentage = (
+            marks_scored / total_marks_possible * 100 if total_marks_possible else 0
+        )
 
     context = {
         'projects':projects,
