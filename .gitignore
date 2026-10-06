@@ -2,4 +2,8 @@ media/
 venv/
 db.sqlite3
 .env
-
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+projectsApp/migrations/__pycache__/
